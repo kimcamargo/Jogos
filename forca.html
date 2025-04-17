@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Forca</title>
+  <style>
+    body {
+      font-family: 'Comic Neue', sans-serif;
+      text-align: center;
+      background-color: #f1f8e9;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #33691e;
+    }
+
+    #dica {
+      font-size: 1.2em;
+      margin: 10px 0;
+      font-weight: bold;
+      color: #3e4d3e;
+    }
+
+    #palavra {
+      font-size: 2em;
+      letter-spacing: 12px;
+      margin: 20px;
+      font-weight: bold;
+    }
+
+    #letras-tentadas {
+      margin-top: 10px;
+      font-size: 1.1em;
+      color: #333;
+    }
+
+    .teclado {
+      margin: 20px 0;
+    }
+
+    .tecla {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 1.2em;
+      background-color: #aed581;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .tecla:disabled {
+      background-color: #c8e6c9;
+      cursor: not-allowed;
+    }
+
+    #boneco {
+      position: relative;
+      width: 220px;
+      height: 300px;
+      margin: 30px auto;
+      background-color: transparent;
+    }
+
+    .forca {
+      position: absolute;
+      background-color: #6d4c41;
+    }
+
+    .forca-base {
+      width: 120px;
+      height: 10px;
+      bottom: 0;
+      left: 0;
+    }
+
+    .forca-poste {
+      width: 10px;
+      height: 250px;
+      left: 55px;
+      bottom: 0;
+    }
+
+    .forca-viga {
+      width: 90px;
+      height: 10px;
+      left: 55px;
+      top: 0;
+    }
+
+    .forca-corda {
+      width: 2px;
+      height: 30px;
+      background-color: #555;
+      left: 140px;
+      top: 10px;
+    }
+
+    .parte {
+      position: absolute;
+      background-color: #222;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .visivel {
+      opacity: 1;
+    }
+
+    .cabeca {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      left: 120px;
+      top: 40px;
+      background-color: #333;
+    }
+
+    .tronco {
+      width: 6px;
+      height: 70px;
+      left: 137px;
+      top: 80px;
+      background-color: #333;
+    }
+
+    .bracoE {
+      width: 40px;
+      height: 5px;
+      left: 98px;
+      top: 100px;
+      transform: rotate(-20deg);
+      transform-origin: right;
+    }
+
+    .bracoD {
+      width: 40px;
+      height: 5px;
+      left: 138px;
+      top: 100px;
+      transform: rotate(20deg);
+      transform-origin: left;
+    }
+
+    .pernaE {
+      width: 40px;
+      height: 5px;
+      left: 98px;
+      top: 150px;
+      transform: rotate(20deg);
+      transform-origin: right;
+    }
+
+    .pernaD {
+      width: 40px;
+      height: 5px;
+      left: 138px;
+      top: 150px;
+      transform: rotate(-20deg);
+      transform-origin: left;
+    }
+
+    .morto {
+      animation: balancar 0.7s ease-in-out infinite alternate;
+    }
+
+    @keyframes balancar {
+      0% { transform: rotate(1deg); }
+      100% { transform: rotate(-2deg); }
+    }
+
+    #resultado {
+      font-size: 1.5em;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #btn-reiniciar {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background: #33691e;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #btn-reiniciar:hover {
+      background-color: #558b2f;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo da Forca 🪢</h1>
+  <div id="dica">Dica: <span id="textoDica"></span></div>
+  <div id="palavra"></div>
+  <div id="letras-tentadas">Letras tentadas: <span id="tentadas"></span></div>
+  <div class="teclado" id="teclado"></div>
+
+  <div id="boneco">
+    <div class="forca forca-base"></div>
+    <div class="forca forca-poste"></div>
+    <div class="forca forca-viga"></div>
+    <div class="forca forca-corda"></div>
+
+    <div class="parte cabeca" id="cabeca"></div>
+    <div class="parte tronco" id="tronco"></div>
+    <div class="parte bracoE" id="bracoE"></div>
+    <div class="parte bracoD" id="bracoD"></div>
+    <div class="parte pernaE" id="pernaE"></div>
+    <div class="parte pernaD" id="pernaD"></div>
+  </div>
+
+  <div id="resultado"></div>
+  <button id="btn-reiniciar" onclick="reiniciarJogo()">🔁 Jogar Novamente</button>
+
+  <script>
+    const enigmas = [
+      { dica: "Tem portas e janelas, moramos nela.", palavra: "casa" },
+      { dica: "É redonda e se chuta no futebol.", palavra: "bola" },
+      { dica: "Animal que mia.", palavra: "gato" },
+      { dica: "Objeto usado para escrever.", palavra: "caneta" },
+      { dica: "Usado para dormir.", palavra: "cama" },
+      { dica: "Doce feito com leite e açúcar.", palavra: "doce" },
+      { dica: "Tem quatro rodas e buzina.", palavra: "carro" }
+    ];
+
+    const jogo = enigmas[Math.floor(Math.random() * enigmas.length)];
+    const palavra = jogo.palavra.toUpperCase();
+    const dica = jogo.dica;
+
+    let acertos = [];
+    let tentativas = [];
+    let erros = 0;
+    const maxErros = 6;
+
+    document.getElementById("textoDica").textContent = dica;
+
+    function atualizarPalavra() {
+      let exibicao = "";
+      for (let letra of palavra) {
+        exibicao += acertos.includes(letra) ? letra + " " : "_ ";
+      }
+      document.getElementById("palavra").textContent = exibicao.trim();
+    }
+
+    function atualizarTentativas() {
+      document.getElementById("tentadas").textContent = tentativas.join(" ");
+    }
+
+    function criarTeclado() {
+      const container = document.getElementById("teclado");
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letra => {
+        const btn = document.createElement("button");
+        btn.textContent = letra;
+        btn.className = "tecla";
+        btn.onclick = () => tentarLetra(letra, btn);
+        container.appendChild(btn);
+      });
+    }
+
+    function tentarLetra(letra, botao) {
+      botao.disabled = true;
+      if (!tentativas.includes(letra)) tentativas.push(letra);
+      atualizarTentativas();
+
+      if (palavra.includes(letra)) {
+        acertos.push(letra);
+      } else {
+        erros++;
+        mostrarParte();
+      }
+
+      atualizarPalavra();
+      verificarFim();
+    }
+
+    function mostrarParte() {
+      const partes = ["cabeca", "tronco", "bracoE", "bracoD", "pernaE", "pernaD"];
+      if (erros <= partes.length) {
+        document.getElementById(partes[erros - 1]).classList.add("visivel");
+      }
+    }
+
+    function verificarFim() {
+      const fim = !palavra.split("").some(l => !acertos.includes(l));
+      if (fim) {
+        document.getElementById("resultado").innerHTML = "🎉 Parabéns, você venceu!";
+        desativarTeclado();
+        mostrarBotaoReiniciar();
+      } else if (erros >= maxErros) {
+        document.getElementById("resultado").innerHTML = `💀 Você perdeu! A palavra era: <strong>${palavra}</strong>`;
+        document.getElementById("cabeca").classList.add("morto");
+        document.querySelectorAll(".parte").forEach(p => p.classList.add("visivel"));
+        desativarTeclado();
+        mostrarBotaoReiniciar();
+      }
+    }
+
+    function desativarTeclado() {
+      document.querySelectorAll(".tecla").forEach(btn => btn.disabled = true);
+    }
+
+    function mostrarBotaoReiniciar() {
+      document.getElementById("btn-reiniciar").style.display = "inline-block";
+    }
+
+    function reiniciarJogo() {
+      location.reload();
+    }
+
+    criarTeclado();
+    atualizarPalavra();
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paisagens Naturais e Humanas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ecf0f1;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #2d3436;
+      margin-bottom: 10px;
+    }
+    .instructions {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .draggable {
+      padding: 10px 20px;
+      background: #dfe6e9;
+      border-radius: 10px;
+      cursor: grab;
+      font-weight: bold;
+      margin: 5px;
+      display: inline-block;
+    }
+    .drag-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .drop-area-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .drop-box {
+      width: 300px;
+      min-height: 250px;
+      background: #b2bec3;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .drop-box h3 {
+      margin-bottom: 10px;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0984e3;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #74b9ff;
+    }
+    .draggable.correct {
+      background: #55efc4;
+    }
+    .draggable.incorrect {
+      background: #ff7675;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌄 Paisagens Naturais e Humanas</h1>
+  <p class="instructions">Arraste as palavras para a categoria correta: <strong>Paisagem Natural</strong> ou <strong>Paisagem Humanizada</strong>.</p>
+
+  <div class="drag-options" id="drag-options"></div>
+
+  <div class="drop-area-container">
+    <div class="drop-box" data-category="natural">
+      <h3>Paisagem Natural</h3>
+    </div>
+    <div class="drop-box" data-category="humanizada">
+      <h3>Paisagem Humanizada</h3>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn" onclick="verificarRespostas()">Enviar</button>
+    <button class="btn" onclick="reiniciarJogo()">Jogar Novamente</button>
+    <a href="geografia.html" class="btn">Voltar</a>
+  </div>
+
+  <div id="resultado"></div>
+
+<script>
+  const naturais = [
+    "Floresta", "Cachoeira", "Montanha", "Praia", "Deserto", "Lago", "Cânion", "Vulcão", "Rio", "Savana",
+    "Pântano", "Caverna", "Mata", "Ilha", "Penhasco", "Gruta", "Vale", "Cordilheira", "Campo", "Chapada",
+    "Mangue", "Geleira", "Duna", "Pantanal", "Bosque", "Serra", "Crista", "Terra", "Fenda", "Oceano",
+    "Planície", "Escarpa", "Mar", "Areia", "Tundra", "Poço", "Córrego", "Pedra", "Trilha", "Encosta",
+    "Lajedo", "Riacho", "Neve", "Rochedo", "Cratera", "Cume", "Estalactite", "Estalagmite", "Buraco Azul", "Baía"
+  ];
+
+  const humanizadas = [
+    "Cidade", "Ponte", "Estrada", "Fazenda", "Barragem", "Ferrovia", "Prédio", "Aeroporto", "Porto", "Fábrica",
+    "Rodovia", "Escola", "Hospital", "Estádio", "Templo", "Shopping", "Teatro", "Biblioteca", "Igreja", "Cinema",
+    "Casa", "Apartamento", "Sítio", "Posto", "Mercado", "Restaurante", "Cemitério", "Castelo", "Hotel", "Delegacia",
+    "Usina", "Pátio", "Estação", "Zoológico", "Museu", "Galeria", "Feira", "Bar", "Lanchonete", "Ponte Estaiada",
+    "Estacionamento", "Terminal", "Oficina", "Torre", "Passarela", "Condomínio", "Centro Comercial", "Praça", "Rotatória", "Marina"
+  ];
+
+  const palavrasOriginais = [];
+
+  function embaralhar(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function carregarOpcoes() {
+    const container = document.getElementById('drag-options');
+    container.innerHTML = "";
+    const naturaisSelecionadas = embaralhar([...naturais]).slice(0, 10);
+    const humanizadasSelecionadas = embaralhar([...humanizadas]).slice(0, 10);
+
+    const palavras = [...naturaisSelecionadas.map(p => ({ texto: p, tipo: "natural" })),
+                      ...humanizadasSelecionadas.map(p => ({ texto: p, tipo: "humanizada" }))];
+
+    palavrasOriginais.length = 0;
+    palavrasOriginais.push(...palavras);
+
+    embaralhar(palavras).forEach(palavra => {
+      const el = document.createElement("div");
+      el.className = "draggable";
+      el.textContent = palavra.texto;
+      el.setAttribute("draggable", true);
+      el.dataset.category = palavra.tipo;
+      el.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text", palavra.texto);
+        e.dataTransfer.setData("category", palavra.tipo);
+      });
+      container.appendChild(el);
+    });
+  }
+
+  document.querySelectorAll(".drop-box").forEach(box => {
+    box.addEventListener("dragover", e => e.preventDefault());
+    box.addEventListener("drop", e => {
+      e.preventDefault();
+      const texto = e.dataTransfer.getData("text");
+      const tipo = e.dataTransfer.getData("category");
+
+      const dragEl = [...document.querySelectorAll(".draggable")].find(el => el.textContent.trim() === texto.trim());
+      if (!dragEl) return;
+
+      const novaDiv = document.createElement("div");
+      novaDiv.className = "draggable";
+      novaDiv.textContent = texto;
+      novaDiv.dataset.correct = box.dataset.category === tipo;
+      box.appendChild(novaDiv);
+      dragEl.remove();
+    });
+  });
+
+  function verificarRespostas() {
+    const respostaEls = document.querySelectorAll(".drop-box .draggable");
+    let acertos = 0, erros = 0;
+    respostaEls.forEach(el => {
+      if (el.dataset.correct === "true") {
+        el.classList.add("correct");
+        acertos++;
+      } else {
+        el.classList.add("incorrect");
+        erros++;
+      }
+    });
+    document.getElementById("resultado").innerHTML = `<p><strong>Acertos:</strong> ${acertos} | <strong>Erros:</strong> ${erros}</p>`;
+  }
+
+  function reiniciarJogo() {
+    document.getElementById("resultado").innerHTML = "";
+    document.querySelectorAll(".drop-box").forEach(box => box.innerHTML = `<h3>${box.dataset.category === 'natural' ? 'Paisagem Natural' : 'Paisagem Humanizada'}</h3>`);
+    carregarOpcoes();
+  }
+
+  carregarOpcoes();
+</script>
+</body>
+</html>

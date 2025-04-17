@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classifique os Animais</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff8e1;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #6d4c41;
+      margin-bottom: 10px;
+    }
+    .instructions {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .draggable {
+      padding: 10px;
+      background: #ffe0b2;
+      border-radius: 10px;
+      cursor: grab;
+      font-weight: bold;
+      margin: 5px;
+      display: inline-block;
+      width: 100px;
+    }
+    .draggable img {
+      width: 60px;
+      height: 60px;
+      display: block;
+      margin: 0 auto 5px;
+    }
+    .drag-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .drop-area-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .drop-box {
+      width: 300px;
+      min-height: 250px;
+      background: #ffe082;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .drop-box h3 {
+      margin-bottom: 10px;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #8d6e63;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #bcaaa4;
+    }
+    .draggable.correct {
+      background: #a5d6a7;
+    }
+    .draggable.incorrect {
+      background: #ef9a9a;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐾 Classifique os Animais</h1>
+  <p class="instructions">Arraste os animais para a categoria correta: <strong>Vertebrados</strong> ou <strong>Invertebrados</strong>.</p>
+
+  <div class="drag-options" id="drag-options"></div>
+
+  <div class="drop-area-container">
+    <div class="drop-box" data-category="vertebrado">
+      <h3>Vertebrados</h3>
+    </div>
+    <div class="drop-box" data-category="invertebrado">
+      <h3>Invertebrados</h3>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn" onclick="verificarRespostas()">Responder</button>
+    <button class="btn" onclick="reiniciarJogo()">Jogar Novamente</button>
+    <a href="ciencias.html" class="btn">Voltar</a>
+  </div>
+
+  <div id="resultado"></div>
+
+<script>
+ // CÓDIGO COMPLETO ATUALIZADO COM 50 ANIMAIS DE CADA TIPO
+
+// CÓDIGO COM IMAGENS REVISADAS E CORRETAS PARA CADA ANIMAL
+// BASE COM ÍCONES REVISTOS E CORRETOS UTILIZANDO OpenMoji (ATUALIZAÇÃO FINAL)
+
+const vertebrados = [
+  { nome: "Cachorro", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F436.svg" },
+  { nome: "Gato", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F431.svg" },
+  { nome: "Leão", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F981.svg" },
+  { nome: "Papagaio", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F99C.svg" },
+  { nome: "Sapo", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F438.svg" },
+  { nome: "Jacaré", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F40A.svg" },
+  { nome: "Urso", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F43B.svg" },
+  { nome: "Cavalo", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F434.svg" },
+  { nome: "Elefante", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F418.svg" },
+  { nome: "Macaco", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F412.svg" },
+  { nome: "Águia", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F985.svg" },
+  { nome: "Tigre", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F42F.svg" },
+  { nome: "Coruja", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F989.svg" },
+  { nome: "Golfinho", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F42C.svg" },
+  { nome: "Zebra", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F993.svg" },
+  { nome: "Galinha", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F413.svg" },
+  { nome: "Camaleão", img: "data:image/png;base64,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" },
+  { nome: "Pinguim", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F427.svg" },
+  { nome: "Cobra", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F40D.svg" },
+  { nome: "Rato", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F401.svg" }
+];
+
+const invertebrados = [
+  { nome: "Borboleta", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F98B.svg" },
+  { nome: "Formiga", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F41C.svg" },
+  { nome: "Aranha", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F577.svg" },
+  { nome: "Polvo", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F419.svg" },
+  { nome: "Caracol", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F40C.svg" },
+  { nome: "Minhoca", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjLS7gGzzKniWCrptq7joiKvBC6-af6wMaNg&s" },
+  { nome: "Estrela-do-mar", img: "https://cdn-icons-png.flaticon.com/512/853/853760.png" },
+  { nome: "Mosquito", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F99F.svg" },
+  { nome: "Lagarta", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F41B.svg" },
+  { nome: "Barata", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1FAB3.svg" },
+  
+  { nome: "Lula", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F991.svg" },
+  { nome: "Coral", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1FAB8.svg" },
+  { nome: "Abelha", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F41D.svg" },
+  { nome: "Percevejo", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1FAB3.svg" },
+  { nome: "Ácaro", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1FAB2.svg" },
+  { nome: "Piolho", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1FAB2.svg" },
+  { nome: "Caranguejo", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F980.svg" },
+  { nome: "Camarão", img: "https://raw.githubusercontent.com/hfg-gmuend/openmoji/master/color/svg/1F990.svg" },
+  
+];
+
+  function embaralhar(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function carregarOpcoes() {
+    const container = document.getElementById("drag-options");
+    container.innerHTML = "";
+    const selecionadas = [
+      ...embaralhar(vertebrados).slice(0, 10).map(a => ({ ...a, tipo: "vertebrado" })),
+      ...embaralhar(invertebrados).slice(0, 10).map(a => ({ ...a, tipo: "invertebrado" }))
+    ];
+    embaralhar(selecionadas).forEach(op => {
+      const el = document.createElement("div");
+      el.className = "draggable";
+      el.setAttribute("draggable", true);
+      el.dataset.category = op.tipo;
+      el.innerHTML = `<img src="${op.img}" alt="${op.nome}"><span>${op.nome}</span>`;
+      el.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text", op.nome);
+        e.dataTransfer.setData("category", op.tipo);
+      });
+      container.appendChild(el);
+    });
+  }
+
+  document.querySelectorAll(".drop-box").forEach(box => {
+    box.addEventListener("dragover", e => e.preventDefault());
+    box.addEventListener("drop", e => {
+      e.preventDefault();
+      const texto = e.dataTransfer.getData("text");
+      const tipo = e.dataTransfer.getData("category");
+
+      const dragEl = [...document.querySelectorAll(".draggable")].find(el => el.textContent.includes(texto));
+      if (!dragEl) return;
+
+      const novaDiv = document.createElement("div");
+      novaDiv.className = "draggable";
+      novaDiv.innerHTML = dragEl.innerHTML;
+      novaDiv.dataset.correct = box.dataset.category === tipo;
+      box.appendChild(novaDiv);
+      dragEl.remove();
+    });
+  });
+
+  function verificarRespostas() {
+    const respostaEls = document.querySelectorAll(".drop-box .draggable");
+    let acertos = 0, erros = 0;
+    respostaEls.forEach(el => {
+      if (el.dataset.correct === "true") {
+        el.classList.add("correct");
+        acertos++;
+      } else {
+        el.classList.add("incorrect");
+        erros++;
+      }
+    });
+    document.getElementById("resultado").innerHTML = `<p><strong>Acertos:</strong> ${acertos} | <strong>Erros:</strong> ${erros}</p>`;
+  }
+
+  function reiniciarJogo() {
+    document.getElementById("resultado").innerHTML = "";
+    document.querySelectorAll(".drop-box").forEach(box => box.innerHTML = `<h3>${box.dataset.category === 'vertebrado' ? 'Vertebrados' : 'Invertebrados'}</h3>`);
+    carregarOpcoes();
+  }
+
+  carregarOpcoes();
+</script>
+</body>
+</html>

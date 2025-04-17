@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Operações Didáticas</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #2e86de;
+    }
+
+    .operation-box {
+      display: inline-block;
+      padding: 20px;
+      border: 2px solid #2e86de;
+      border-radius: 10px;
+      background-color: #ffffff;
+      margin: 20px 0;
+    }
+
+    .number {
+      font-size: 2em;
+      display: block;
+      text-align: right;
+      margin-right: 10px;
+    }
+
+    .operator {
+      font-size: 2em;
+      display: inline-block;
+      width: 30px;
+      text-align: center;
+    }
+
+    .line {
+      border-top: 2px solid black;
+      width: 100px;
+      margin: 10px auto;
+    }
+
+    .input-answer {
+      font-size: 1.5em;
+      padding: 5px;
+      width: 100px;
+      text-align: center;
+    }
+
+    .btn {
+      font-size: 1em;
+      padding: 10px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #00b894;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #019875;
+    }
+
+    #feedback {
+      font-size: 1.3em;
+      margin-top: 15px;
+    }
+
+    #passoAPasso, #dicaTexto {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #333;
+      white-space: pre-line;
+    }
+
+    #scoreLog {
+      margin-top: 30px;
+      font-size: 1em;
+      background-color: #f8f9fa;
+      padding: 10px;
+      border: 1px solid #ccc;
+      width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧮 Aprenda Operações Matemáticas!</h1>
+
+  <div class="operation-box" id="operationBox">
+    <span class="number" id="number1"></span>
+    <span class="operator" id="operator"></span>
+    <span class="number" id="number2"></span>
+    <div class="line"></div>
+    <input type="number" class="input-answer" id="userAnswer">
+  </div>
+
+  <br>
+  <button class="btn" onclick="checkAnswer()">Verificar</button>
+  <button class="btn" onclick="generateExercise()">Nova Conta</button>
+  <button class="btn" onclick="mostrarDica()">Dica</button>
+
+  <div id="feedback"></div>
+  <div id="passoAPasso"></div>
+  <div id="dicaTexto"></div>
+  <div id="scoreLog"></div>
+
+  <audio id="audioSuccess" src="https://www.soundjay.com/buttons/sounds/button-4.mp3" preload="auto"></audio>
+  <audio id="audioFail" src="https://www.soundjay.com/buttons/sounds/button-10.mp3" preload="auto"></audio>
+
+  <script>
+    let currentAnswer = 0;
+    let currentOp = '+';
+    let score = 0;
+    let currentNum1 = 0;
+    let currentNum2 = 0;
+
+    function generateExercise() {
+      document.getElementById('feedback').innerText = '';
+      document.getElementById('passoAPasso').innerText = '';
+      document.getElementById('dicaTexto').innerText = '';
+
+      const opIndex = Math.floor(Math.random() * 4);
+      const operators = ['+', '-', '×', '÷'];
+      currentOp = operators[opIndex];
+
+      let num1 = Math.floor(Math.random() * 9) + 1;
+      let num2 = Math.floor(Math.random() * 9) + 1;
+
+      if (currentOp === '+' || currentOp === '×') {
+        currentNum1 = num1 * 10;
+        currentNum2 = num2;
+      } else if (currentOp === '-') {
+        currentNum1 = num1 * 10 + num2;
+        currentNum2 = Math.floor(Math.random() * num1 * 10);
+      } else if (currentOp === '÷') {
+        currentNum2 = num2;
+        currentNum1 = currentNum2 * (Math.floor(Math.random() * 5) + 1);
+      }
+
+      document.getElementById('number1').innerText = currentNum1;
+      document.getElementById('number2').innerText = currentNum2;
+      document.getElementById('operator').innerText = currentOp;
+      document.getElementById('userAnswer').value = '';
+
+      switch(currentOp) {
+        case '+': currentAnswer = currentNum1 + currentNum2; break;
+        case '-': currentAnswer = currentNum1 - currentNum2; break;
+        case '×': currentAnswer = currentNum1 * currentNum2; break;
+        case '÷': currentAnswer = currentNum1 / currentNum2; break;
+      }
+    }
+
+    function checkAnswer() {
+      const userVal = parseInt(document.getElementById('userAnswer').value);
+      const feedback = document.getElementById('feedback');
+      const passo = document.getElementById('passoAPasso');
+      const audioSuccess = document.getElementById('audioSuccess');
+      const audioFail = document.getElementById('audioFail');
+
+      let passoTexto = '';
+
+      if (currentOp === '+') {
+        passoTexto = `Vamos somar:
+1. Pegue o número de cima: ${currentNum1}
+2. Pegue o número de baixo: ${currentNum2}
+3. Imagine a conta na lousa ou papel: some o número de cima com o de baixo.
+Ex: ${currentNum1} + ${currentNum2} = ?`;
+      } else if (currentOp === '-') {
+        passoTexto = `Vamos subtrair:
+1. Pegue o número maior: ${currentNum1}
+2. Subtraia o número menor: ${currentNum2}
+3. Imagine: quanto falta do número menor para chegar no maior?`;
+      } else if (currentOp === '×') {
+        passoTexto = `Multiplicação é repetir somas:
+1. Pegue o número ${currentNum1}
+2. Imagine ele sendo somado ${currentNum2} vezes.
+Ex: ${currentNum1} + ${currentNum1} + ... (${currentNum2} vezes)`;
+      } else {
+        passoTexto = `Divisão é repartir:
+1. Pegue ${currentNum1} e veja quantas vezes o número ${currentNum2} cabe dentro dele.
+2. Imagine separando ${currentNum1} em grupos de ${currentNum2}`;
+      }
+
+      passo.innerText = passoTexto;
+
+      if (userVal === currentAnswer) {
+        feedback.innerText = "✅ Muito bem! Você acertou!";
+        feedback.style.color = "green";
+        score++;
+        audioSuccess.play();
+      } else {
+        feedback.innerText = `❌ Quase! A resposta correta era ${currentAnswer}`;
+        feedback.style.color = "red";
+        score = Math.max(0, score - 1);
+        audioFail.play();
+      }
+
+      document.getElementById('scoreLog').innerText = `Pontuação total: ${score} acerto(s)`;
+    }
+
+    function mostrarDica() {
+      let dica = '';
+      if (currentOp === '+') {
+        dica = '👣 Dica: Veja o número de cima e o número de baixo. Conte no dedo a partir do número de cima. Por exemplo: 20 + 4 → Comece do 20 e conte 4 vezes.';
+      } else if (currentOp === '-') {
+        dica = '👣 Dica: Veja quantos faltam para chegar no número de cima. Exemplo: 24 - 3 → conte 3 para trás a partir do 24.';
+      } else if (currentOp === '×') {
+        dica = '👣 Dica: Multiplicar é somar várias vezes. Ex: 3 × 2 → pense como 3 + 3.';
+      } else {
+        dica = '👣 Dica: Dividir é separar igualmente. Ex: 12 ÷ 3 → pense em dividir 12 em 3 grupos iguais. Quantos em cada?';
+      }
+      document.getElementById('dicaTexto').innerText = dica;
+    }
+
+    generateExercise();
+  </script>
+</body>
+</html>

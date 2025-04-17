@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cuidados com o Meio Ambiente</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eafaf1;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      color: #2e7d32;
+      margin-bottom: 10px;
+    }
+    .instructions {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .draggable {
+      padding: 10px 20px;
+      background: #c8e6c9;
+      border-radius: 10px;
+      cursor: grab;
+      font-weight: bold;
+      margin: 5px;
+      display: inline-block;
+    }
+    .drag-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .drop-area-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .drop-box {
+      width: 300px;
+      min-height: 250px;
+      background: #a5d6a7;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    .drop-box h3 {
+      margin-bottom: 10px;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      background-color: #388e3c;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #66bb6a;
+    }
+    .draggable.correct {
+      background: #81ecec;
+    }
+    .draggable.incorrect {
+      background: #ff8a80;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌱 Cuidados com o Meio Ambiente</h1>
+  <p class="instructions">Arraste as ações para a categoria correta: <strong>Ajuda o Meio Ambiente</strong> ou <strong>Prejudica o Meio Ambiente</strong>.</p>
+
+  <div class="drag-options" id="drag-options"></div>
+
+  <div class="drop-area-container">
+    <div class="drop-box" data-category="ajuda">
+      <h3>Ajuda o Meio Ambiente</h3>
+    </div>
+    <div class="drop-box" data-category="prejudica">
+      <h3>Prejudica o Meio Ambiente</h3>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button class="btn" onclick="verificarRespostas()">Responder</button>
+    <button class="btn" onclick="reiniciarJogo()">Jogar Novamente</button>
+    <a href="geografia.html" class="btn">Voltar</a>
+  </div>
+
+  <div id="resultado"></div>
+
+<script>
+  const ajuda = [
+    "Plantar árvores", "Reciclar", "Economizar água", "Usar bicicleta",
+    "Separar o lixo", "Reutilizar embalagens", "Apagar as luzes",
+    "Compostagem", "Cuidar dos animais", "Usar sacolas reutilizáveis",
+    "Preservar nascentes", "Cuidar dos rios", "Coletar lixo da praia",
+    "Fechar a torneira ao escovar os dentes", "Ensinar os colegas sobre o meio ambiente",
+    "Economizar energia", "Reutilizar papel", "Cultivar hortas", "Aproveitar água da chuva", "Participar de mutirão ecológico",
+    "Desligar aparelhos da tomada", "Doar roupas", "Trocar papel por digital", "Usar copo reutilizável", "Cuidar das árvores",
+    "Evitar plástico", "Usar energia solar", "Guardar lixo até encontrar lixeira", "Andar a pé", "Usar energia eólica",
+    "Comer alimentos naturais", "Usar compostagem", "Incentivar coleta seletiva", "Desenhar com papel reciclado",
+    "Plantar em garrafas PET", "Cuidar da fauna", "Separar vidro e metal", "Preservar áreas verdes",
+    "Fazer brinquedos com recicláveis", "Não desperdiçar comida", "Ajudar campanhas ecológicas",
+    "Evitar uso de papel alumínio", "Evitar canudos", "Manter a rua limpa", "Trocar embalagens por refil",
+    "Compartilhar brinquedos", "Criar placas educativas", "Fechar registro do chuveiro", "Apagar luz ao sair",
+    "Cuidar da escola", "Economizar papel higiênico"
+  ];
+
+  const prejudica = [
+    "Jogar lixo no chão", "Desmatar", "Poluir rios", "Gastar muita água",
+    "Queimar lixo", "Usar sacolas plásticas", "Descartar óleo na pia",
+    "Deixar luz acesa à toa", "Caçar animais", "Usar carro sem necessidade",
+    "Fazer queimadas", "Cortar árvores ilegalmente", "Jogar lixo na praia",
+    "Desperdiçar papel", "Lavar calçada com mangueira",
+    "Jogar pilhas no lixo comum", "Poluir com som alto", "Destruir habitats naturais",
+    "Consumir sem necessidade", "Usar muito plástico descartável",
+    "Deixar torneira aberta", "Usar papel sem necessidade", "Jogar lixo em bueiro",
+    "Deixar chuveiro ligado", "Rasgar livros", "Estragar brinquedos",
+    "Jogar bituca de cigarro na rua", "Quebrar árvores", "Desrespeitar animais",
+    "Acender fogueira em área verde", "Colocar lixo no mar",
+    "Poluir com tinta", "Jogar lixo da janela do carro", "Deixar o parquinho sujo",
+    "Usar carro para ir à esquina", "Usar água da mangueira em excesso",
+    "Ignorar avisos ecológicos", "Não reciclar", "Jogar celular no lixo comum",
+    "Pichar muros", "Poluir o ar", "Comprar sem precisar",
+    "Lavar carro todos os dias", "Gritar em áreas naturais",
+    "Comprar muito plástico", "Jogar lixo na floresta", "Pisar em flores",
+    "Desperdiçar energia elétrica", "Jogar lâmpadas no lixo comum"
+  ];
+
+  function embaralhar(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  function carregarOpcoes() {
+    const container = document.getElementById("drag-options");
+    container.innerHTML = "";
+    const selecionadas = [
+      ...embaralhar(ajuda).slice(0, 10).map(t => ({ texto: t, tipo: "ajuda" })),
+      ...embaralhar(prejudica).slice(0, 10).map(t => ({ texto: t, tipo: "prejudica" }))
+    ];
+    embaralhar(selecionadas).forEach(op => {
+      const el = document.createElement("div");
+      el.className = "draggable";
+      el.textContent = op.texto;
+      el.setAttribute("draggable", true);
+      el.dataset.category = op.tipo;
+      el.addEventListener("dragstart", e => {
+        e.dataTransfer.setData("text", op.texto);
+        e.dataTransfer.setData("category", op.tipo);
+      });
+      container.appendChild(el);
+    });
+  }
+
+  document.querySelectorAll(".drop-box").forEach(box => {
+    box.addEventListener("dragover", e => e.preventDefault());
+    box.addEventListener("drop", e => {
+      e.preventDefault();
+      const texto = e.dataTransfer.getData("text");
+      const tipo = e.dataTransfer.getData("category");
+
+      const dragEl = [...document.querySelectorAll(".draggable")].find(el => el.textContent.trim() === texto.trim());
+      if (!dragEl) return;
+
+      const novaDiv = document.createElement("div");
+      novaDiv.className = "draggable";
+      novaDiv.textContent = texto;
+      novaDiv.dataset.correct = box.dataset.category === tipo;
+      box.appendChild(novaDiv);
+      dragEl.remove();
+    });
+  });
+
+  function verificarRespostas() {
+    const respostaEls = document.querySelectorAll(".drop-box .draggable");
+    let acertos = 0, erros = 0;
+    respostaEls.forEach(el => {
+      if (el.dataset.correct === "true") {
+        el.classList.add("correct");
+        acertos++;
+      } else {
+        el.classList.add("incorrect");
+        erros++;
+      }
+    });
+    document.getElementById("resultado").innerHTML = `<p><strong>Acertos:</strong> ${acertos} | <strong>Erros:</strong> ${erros}</p>`;
+  }
+
+  function reiniciarJogo() {
+    document.getElementById("resultado").innerHTML = "";
+    document.querySelectorAll(".drop-box").forEach(box => box.innerHTML = `<h3>${box.dataset.category === 'ajuda' ? 'Ajuda o Meio Ambiente' : 'Prejudica o Meio Ambiente'}</h3>`);
+    carregarOpcoes();
+  }
+
+  carregarOpcoes();
+</script>
+</body>
+</html>

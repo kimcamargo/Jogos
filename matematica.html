@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Matemática - Jogos Educativos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+      .btn-voltar {
+    display: inline-block;
+    margin: 30px auto;
+    padding: 12px 25px;
+    background-color: #0984e3;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn-voltar:hover {
+    background-color: #74b9ff;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 600px) {
+    .btn-voltar {
+      font-size: 1em;
+      padding: 10px 20px;
+    }
+  }
+    h1 {
+      margin-top: 30px;
+      font-size: 2em;
+      text-align: center;
+      color: #2d3436;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 20px;
+      width: 100%;
+      max-width: 1000px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 280px;
+      height: 280px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      text-decoration: none;
+      color: #2d3436;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card-img-wrapper {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .card h2 {
+      font-size: 1.2em;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        max-width: 90%;
+        height: auto;
+      }
+
+      .card-img-wrapper {
+        height: 140px;
+      }
+
+      .card h2 {
+        font-size: 1.1em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📘 Jogos de Matemática</h1>
+
+  <div class="card-container">
+    <!-- Card 1 - Ativo -->
+    <a href="math.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/matematica.png" alt="Operações Matemáticas">
+      </div>
+      <h2>As 4 Operações Básicas da Matemática</h2>
+    </a>
+
+    <!-- Card 2 - Em breve -->
+    <div class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/matematica.png" alt="Em breve">
+      </div>
+      <h2>Em breve</h2>
+    </div>
+
+    <!-- Card 3 - Em breve -->
+    <div class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/matematica.png" alt="Em breve">
+      </div>
+      <h2>Em breve</h2>
+    </div>
+
+    <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
+  </div>
+
+</body>
+</html>

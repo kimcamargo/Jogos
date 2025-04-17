@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogos Educativos</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 2.5em;
+      color: #2d3436;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .card {
+      width: 250px;
+      height: 300px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      text-align: center;
+      text-decoration: none;
+      color: #2d3436;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card-img-wrapper {
+      width: 100%;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .card h2 {
+      font-size: 1.4em;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎮 Jogos Educativos da Profe KIM</h1>
+
+  <div class="card-container">
+    <a href="matematica.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/matematica.png" alt="Matemática">
+      </div>
+      <h2>Matemática</h2>
+    </a>
+     
+    <a href="ciencias.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/ciencias.png" alt="Ciências">
+      </div>
+      <h2>Ciências</h2>
+    </a>
+    
+    <a href="historia.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/historia.png" alt="História">
+      </div>
+      <h2>História</h2>
+    </a>
+
+    <a href="portugues.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/portugues.png" alt="Português">
+      </div>
+      <h2>Português</h2>
+    </a>
+
+    <a href="geografia.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/geografia.png" alt="Geografia">
+      </div>
+      <h2>Geografia</h2>
+    </a>
+  </div>
+
+</body>
+</html>

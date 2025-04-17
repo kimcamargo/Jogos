@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Localização e Direções</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #2d3436;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 800px;
+      width: 100%;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+    }
+
+    .instructions {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .drag-area {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      width: 100%;
+    }
+
+    .item, .target {
+      padding: 12px;
+      border: 2px dashed #74b9ff;
+      border-radius: 8px;
+      background: #dfe6e9;
+      text-align: center;
+      cursor: grab;
+    }
+
+    .target {
+      min-height: 50px;
+      background: #ffeaa7;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .drag-area {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🌍 Localização e Direções</h1>
+<div class="game-container">
+  <div class="instructions">
+    Arraste as palavras para o local correto de acordo com a direção indicada:
+  </div>
+  <div class="drag-area">
+    <div class="item" draggable="true" id="frente">Frente</div>
+    <div class="target" data-answer="frente">Local onde se encontra o quadro da sala</div>
+
+    <div class="item" draggable="true" id="esquerda">Esquerda</div>
+    <div class="target" data-answer="esquerda">Lado onde fica a janela</div>
+
+    <div class="item" draggable="true" id="direita">Direita</div>
+    <div class="target" data-answer="direita">Lado onde fica a porta</div>
+
+    <div class="item" draggable="true" id="atras">Atrás</div>
+    <div class="target" data-answer="atras">Local onde os alunos sentam</div>
+  </div>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+  const items = document.querySelectorAll('.item');
+  const targets = document.querySelectorAll('.target');
+  let correct = 0;
+
+  items.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', e.target.id);
+    });
+  });
+
+  targets.forEach(target => {
+    target.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
+
+    target.addEventListener('drop', e => {
+      e.preventDefault();
+      const draggedId = e.dataTransfer.getData('text/plain');
+      const draggedEl = document.getElementById(draggedId);
+
+      if (target.dataset.answer === draggedId && !target.classList.contains('done')) {
+        target.appendChild(draggedEl);
+        target.classList.add('done');
+        correct++;
+        if (correct === 4) {
+          document.getElementById('result').textContent = 'Parabéns! Você posicionou todas corretamente!';
+        }
+      } else if (!target.classList.contains('done')) {
+        alert('Ops! Tente novamente!');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
