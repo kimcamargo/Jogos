@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jogo - Povos Tradicionais</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka One', cursive;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top right, #ade8f4, #48cae4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      color: #ffffff;
+      text-shadow: 2px 2px #333;
+      margin-top: 20px;
+      font-size: 2.5rem;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 700px;
+      width: 90%;
+      text-align: center;
+    }
+
+    .question {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 20px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .options button:hover {
+      background-color: #023e8a;
+      transform: scale(1.05);
+    }
+
+    .feedback {
+      font-size: 20px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    .buttons button {
+      margin: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #ff6f61;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    .buttons button:hover {
+      background-color: #e63946;
+    }
+
+    @media (max-width: 600px) {
+      .question {
+        font-size: 20px;
+      }
+      .options button {
+        font-size: 18px;
+        padding: 12px;
+      }
+      .buttons button {
+        font-size: 14px;
+        padding: 10px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>POVOS TRADICIONAIS</h1>
+  <div class="container">
+    <div class="question" id="question">CARREGANDO PERGUNTA...</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="buttons">
+      <button onclick="showHint()">💡 DICA</button>
+      <button onclick="loadNewQuestion()">🔁 JOGAR NOVAMENTE</button>
+      <button onclick="location.href='historia.html'">🔙 VOLTAR</button>
+      
+      <div id="rodada" style="font-size: 18px; margin-bottom: 10px; color: #555;"></div>
+      <div id="score" style="font-size: 18px; margin-bottom: 15px; color: #333;">
+        ✅ ACERTOS: 0 | ❌ ERROS: 0
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+  { question: "QUAL POVO VIVE EM CASAS COM PAREDES DE TERRA BATIDA CHAMADAS TAPERAS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "SUAS CASAS SÃO SIMPLES E FUNCIONAIS" },
+  { question: "QUAL POVO TEM DANÇAS COMO MARACATU E SAMBA DE RODA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "MÚSICA É EXPRESSÃO CULTURAL E HISTÓRICA" },
+  { question: "QUAL POVO FAZ FEIRAS DE TROCA ENTRE COMUNIDADES?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "TROCAM PEIXES POR PRODUTOS AGRÍCOLAS" },
+  { question: "QUAL POVO FAZ USO DE CESTARIA E ARTESANATO COM FIBRAS NATURAIS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "UTILIZAM O QUE A NATUREZA OFERECE COM SABEDORIA" },
+  { question: "QUAL POVO GUARDA A MEMÓRIA DA HISTÓRIA DOS AFRICANOS NO BRASIL?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "SÃO OS HERDEIROS DE UMA HISTÓRIA DE LUTA" },
+  { question: "QUAL POVO TEM O CACIQUE COMO LÍDER DA ALDEIA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "O CACIQUE É UM LÍDER MUITO RESPEITADO" },
+  { question: "QUAL POVO DEPENDE DAS CHEIAS DOS RIOS PARA PLANTAR E COLHER?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "A ENCHENTE TRAZ NUTRIENTES PARA O SOLO" },
+  { question: "QUAL POVO TEM CONHECIMENTO SOBRE PLANTAS MEDICINAIS DA FLORESTA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "USAM A NATUREZA COMO FARMÁCIA" },
+  { question: "QUAL POVO TEM ESCOLAS DENTRO DAS ALDEIAS ENSINANDO SUA CULTURA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "ENSINAM A LÍNGUA NATIVA DESDE PEQUENOS" },
+  { question: "QUAL POVO PARTICIPA DAS DANÇAS DE UMBANDA E CANDOMBLÉ?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "RELIGIÕES DE MATRIZ AFRICANA SÃO MUITO IMPORTANTES" },
+  { question: "QUAL POVO TEM DIREITO A TERRAS DEMARCADAS PELO GOVERNO?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "O TERRITÓRIO É SAGRADO PARA ELES" },
+  { question: "QUAL POVO PRESERVA AS TRADIÇÕES ATRAVÉS DA ORALIDADE?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "CONTAR HISTÓRIAS É PASSAR SABEDORIA" },
+  { question: "QUAL POVO FAZ CASAS SOBRE A ÁGUA CHAMADAS PALAFITAS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "SUAS CASAS SÃO ELEVADAS PARA NÃO INUNDAR" },
+  { question: "QUAL POVO REIVINDICA TERRAS TRADICIONAIS E AUTONOMIA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "LUTAM POR DIREITOS DESDE SEMPRE" },
+  { question: "QUAL POVO VIVE EM COMUNIDADES ISOLADAS E USA O BARCO COMO TRANSPORTE?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "O RIO É SUA ESTRADA" },
+  { question: "QUAL POVO MANTÉM A LÍNGUA PORTUGUESA COMO ÚNICO IDIOMA NA COMUNIDADE?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "NÃO POSSUEM LÍNGUAS NATIVAS PRÓPRIAS COMO OUTROS POVOS" },
+  { question: "QUAL POVO TEM SABERES PASSADOS ATRAVÉS DE CANTOS, FESTAS E RITUAIS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "RITUAIS SÃO FUNDAMENTAIS PARA SUA CULTURA" },
+  { question: "QUAL POVO TEM DANÇAS COM ATABAQUES E TAMBOR?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "A BATIDA DO TAMBOR FAZ PARTE DA CULTURA" },
+  { question: "QUAL POVO FAZ FESTAS COMO O FESTIVAL DE PAJÉS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "SEUS RITUAIS CELEBRAM A NATUREZA" },
+  { question: "QUAL POVO PLANTA EM ROÇAS COLETIVAS E DIVIDE OS ALIMENTOS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "O TRABALHO EM GRUPO É MUITO IMPORTANTE" },
+  { question: "QUAL POVO CAÇA E PESCAVA PARA ALIMENTAR A TRIBO?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "SABEM USAR O MEIO AMBIENTE SEM DESTRUÍ-LO" },
+  { question: "QUAL POVO COSTUMA FAZER CASAMENTOS COLETIVOS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "A UNIÃO É CELEBRADA EM COMUNIDADE" },
+  { question: "QUAL POVO FAZ DO RIO SUA FONTE DE TRABALHO, LAZER E VIDA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "O RIO É TUDO PARA ELES" },
+  { question: "QUAL POVO VIVE EM HARMONIA COM A FLORESTA E A TRATA COMO SAGRADA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "A FLORESTA É RESPEITADA COMO UM SER VIVO" },
+  { question: "QUAL POVO USA CORES VIVAS E PINTURAS NO CORPO PARA FESTAS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "CADA DESENHO TEM UM SIGNIFICADO" },
+  { question: "QUAL POVO TEM O RIO COMO SUA ESTRADA E USA CANOAS DIARIAMENTE?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "O BARCO É COMO UM CARRO PARA ELES" },
+  { question: "QUAL POVO TEM COSTUMES RELIGIOSOS DE MATRIZ AFRICANA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "FÉ E RESISTÊNCIA ESTÃO CONECTADAS" },
+  { question: "QUAL POVO FAZ FESTAS JUNINAS À BEIRA DO RIO?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "CELEBRAM COM COMIDA TÍPICA E MÚSICA" },
+  { question: "QUAL POVO TEM OS ENCANTADOS COMO GUIAS ESPIRITUAIS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "ESPIRITUALIDADE FAZ PARTE DA CULTURA" },
+  { question: "QUAL POVO LUTOU CONTRA A ESCRAVIDÃO E FUNDOU QUILOMBOS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "SUAS ORIGENS ESTÃO NA LUTA POR LIBERDADE" },
+  { question: "QUAL POVO MORA EM REGIÕES RURAIS E PLANTA PARA O PRÓPRIO CONSUMO?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "PRATICAM AGRICULTURA DE SUBSISTÊNCIA" },
+  { question: "QUAL POVO TEM FESTIVAIS ONDE CELEBRAM A NATUREZA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "A FESTA É UMA FORMA DE AGRADECIMENTO À FLORESTA" },
+  { question: "QUAL POVO MANTÉM A CULTURA ATRAVÉS DE CANTIGAS, JOGOS E LENDAS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "PASSAM A CULTURA ORALMENTE ENTRE GERAÇÕES" },
+  { question: "QUAL POVO POSSUI COSTUMES AFRICANOS EM SUAS COMIDAS E DANÇAS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "TRADIÇÕES AFRICANAS ESTÃO PRESENTES NO DIA A DIA" },
+  { question: "QUAL POVO VÊ O RIO COMO UM SER VIVO E SAGRADO?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "O RIO NÃO É APENAS ÁGUA, É VIDA" },
+  { question: "QUAL POVO LÊ O TEMPO PELA CHEIA E VAZANTE DOS RIOS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "RIBEIRINHOS", hint: "SABEM A HORA DE PLANTAR E COLHER PELO RIO" },
+  { question: "QUAL POVO CANTA E DANÇA PARA HOMENAGEAR OS ANCESTRAIS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "AS FESTAS CONTAM HISTÓRIAS ANTIGAS" },
+  { question: "QUAL POVO TEM MUITAS LENDAS SOBRE ANIMAIS E NATUREZA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "INDÍGENAS", hint: "ENSINAM COM LENDAS PASSADAS DE BOCA EM BOCA" },
+  { question: "QUAL POVO CHAMA SUAS TERRAS DE QUILOMBOS?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS"], answer: "QUILOMBOLAS", hint: "SÃO LUGARES DE RESISTÊNCIA E IDENTIDADE" },
+  { question: "QUAL POVO É RECONHECIDO COMO TRADICIONAL NA CONSTITUIÇÃO BRASILEIRA?", options: ["RIBEIRINHOS", "INDÍGENAS", "QUILOMBOLAS", "TODOS"], answer: "TODOS", hint: "TODOS TÊM DIREITOS GARANTIDOS EM LEI" }
+];
+
+
+
+  let currentQuestion = {};
+  let hintShown = false;
+  let acertos = 0;
+  let erros = 0;
+  let respondeu = false;
+  let rodada = 1;
+  const totalRodadas = 10;
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  function updateScore() {
+    document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
+    document.getElementById("rodada").textContent = `🔄 RODADA ${rodada} DE ${totalRodadas}`;
+  }
+
+  function loadNewQuestion() {
+    if (rodada > totalRodadas) {
+      showFinalScreen();
+      return;
+    }
+
+    hintShown = false;
+    respondeu = false;
+    document.getElementById('feedback').textContent = '';
+    currentQuestion = questions[Math.floor(Math.random() * questions.length)];
+    document.getElementById('question').textContent = currentQuestion.question;
+
+    const optionsDiv = document.getElementById('options');
+    optionsDiv.innerHTML = '';
+    let shuffledOptions = [...currentQuestion.options];
+    shuffle(shuffledOptions);
+
+    shuffledOptions.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswer(opt);
+      optionsDiv.appendChild(btn);
+    });
+
+    updateScore();
+  }
+
+  function checkAnswer(selected) {
+    if (respondeu) return;
+    respondeu = true;
+
+    const feedback = document.getElementById('feedback');
+    if (selected === currentQuestion.answer) {
+      feedback.textContent = '🎉 ACERTOU! PARABÉNS!';
+      feedback.style.color = 'green';
+      acertos++;
+    } else {
+      feedback.textContent = `❌ ERROU! A RESPOSTA CERTA É: "${currentQuestion.answer}"`;
+      feedback.style.color = 'red';
+      erros++;
+    }
+
+    updateScore();
+    rodada++;
+  }
+
+  function showHint() {
+    if (!hintShown) {
+      alert("💡 DICA: " + currentQuestion.hint);
+      hintShown = true;
+    }
+  }
+
+  function showFinalScreen() {
+    document.getElementById('question').textContent = "🏁 FIM DO JOGO!";
+    document.getElementById('options').innerHTML = '';
+    document.getElementById('feedback').innerHTML = `VOCÊ ACERTOU ${acertos} E ERROU ${erros}.`;
+    document.getElementById('score').textContent = "";
+    document.getElementById('rodada').textContent = "";
+
+    const playAgainBtn = document.createElement('button');
+    playAgainBtn.textContent = "🔄 JOGAR NOVAMENTE";
+    playAgainBtn.onclick = reiniciarJogo;
+    playAgainBtn.style.marginTop = "20px";
+    playAgainBtn.style.padding = "12px 20px";
+    playAgainBtn.style.fontSize = "18px";
+    playAgainBtn.style.backgroundColor = "#ff6f61";
+    playAgainBtn.style.color = "#fff";
+    playAgainBtn.style.border = "none";
+    playAgainBtn.style.borderRadius = "10px";
+    playAgainBtn.style.cursor = "pointer";
+
+    document.getElementById('options').appendChild(playAgainBtn);
+  }
+
+  function reiniciarJogo() {
+    acertos = 0;
+    erros = 0;
+    rodada = 1;
+    loadNewQuestion();
+  }
+
+  window.onload = () => {
+    loadNewQuestion();
+  };
+</script>
+</body>
+</html>
