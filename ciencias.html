@@ -15,31 +15,26 @@
       align-items: center;
       min-height: 100vh;
     }
-      .btn-voltar {
-    display: inline-block;
-    margin: 30px auto;
-    padding: 12px 25px;
-    background-color: #0984e3;
-    color: white;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 30px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
 
-  .btn-voltar:hover {
-    background-color: #74b9ff;
-    transform: translateY(-2px);
-  }
-
-  @media (max-width: 600px) {
     .btn-voltar {
-      font-size: 1em;
-      padding: 10px 20px;
+      display: inline-block;
+      margin: 30px auto;
+      padding: 12px 25px;
+      background-color: #0984e3;
+      color: white;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
-  }
+
+    .btn-voltar:hover {
+      background-color: #74b9ff;
+      transform: translateY(-2px);
+    }
+
     h1 {
       margin-top: 30px;
       font-size: 2em;
@@ -99,6 +94,11 @@
     }
 
     @media (max-width: 600px) {
+      .btn-voltar {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+
       .card {
         max-width: 90%;
         height: auto;
@@ -119,32 +119,31 @@
   <h1>📘 Jogos de Ciências</h1>
 
   <div class="card-container">
-    <!-- Card 1 - Ativo -->
+    <!-- Card 1 - Classificação -->
     <a href="Classifique_Animais.html" class="card">
       <div class="card-img-wrapper">
-        <img src="Image/ciencias.png" alt="Operações Ciênciass">
+        <img src="Image/ciencias.png" alt="Classifique os Animais">
       </div>
-      <h2>Classifique os Animais  </h2>
+      <h2>Classifique os Animais</h2>
     </a>
 
-    <!-- Card 2 - Em breve -->
-    <div class="card">
+    <!-- Card 2 - Reciclagem -->
+    <a href="reciclagem.html" class="card">
       <div class="card-img-wrapper">
-        <img src="Image/ciencias.png" alt="Em breve">
+        <img src="Image/ciencias.png" alt="Jogo da Reciclagem">
       </div>
-      <h2>Em breve</h2>
-    </div>
+      <h2>Jogo da Reciclagem</h2>
+    </a>
 
     <!-- Card 3 - Em breve -->
-    <div class="card">
+     <a href="ciclo-vida.html" class="card">
       <div class="card-img-wrapper">
-        <img src="Image/ciencias.png" alt="Em breve">
+        <img src="Image/ciencias.png" alt="Ciclo da Vida">
       </div>
-      <h2>Em breve</h2>
-    </div>
+      <h2>Ciclo da Vida</h2>
+    </a>
 
-    <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
-  </div>
+  <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
 
 </body>
 </html>

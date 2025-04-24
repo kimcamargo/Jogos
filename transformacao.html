@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ontem, Hoje e Amanhã</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #fceabb, #f8b500);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #2d3436;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .game-box {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      padding: 25px;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .question {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #2d3436;
+      margin-bottom: 20px;
+    }
+
+    .option-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      margin: 30px 0;
+    }
+
+    .option {
+      font-size: 4em;
+      cursor: pointer;
+      padding: 20px;
+      border-radius: 20px;
+      border: 4px solid transparent;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .option:hover {
+      transform: scale(1.15);
+    }
+
+    .correct {
+      border-color: green !important;
+    }
+
+    .incorrect {
+      border-color: red !important;
+    }
+
+    .feedback {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 1em;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #55efc4;
+    }
+
+    .back-button {
+      background-color: #636e72;
+    }
+
+    .back-button:hover {
+      background-color: #b2bec3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🕰️ Ontem, Hoje e Amanhã</h1>
+
+  <div class="game-box">
+    <div class="question" id="question"></div>
+    <div class="option-buttons">
+      <div class="option" id="option1" onclick="checkAnswer(0)"></div>
+      <div class="option" id="option2" onclick="checkAnswer(1)"></div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="button-row">
+      
+      <button class="btn" onclick="shuffleQuestion()">Trocar pergunta</button>
+      <button class="btn back-button" onclick="voltar()">Voltar para História</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+  { prompt: "Qual representa o passado?", options: ["📻", "📱"], correctIndex: 0 }, // Rádio vs. Smartphone
+  { prompt: "Qual é mais moderno?", options: ["🚲", "🛵"], correctIndex: 1 }, // Bicicleta vs. Scooter elétrica
+  { prompt: "Qual usamos hoje?", options: ["✉️", "📧"], correctIndex: 1 }, // Carta vs. E-mail
+  { prompt: "Qual representa o passado?", options: ["📼", "💿"], correctIndex: 0 }, // Fita VHS vs. DVD
+  { prompt: "Qual é mais antigo?", options: ["🚂", "🚄"], correctIndex: 0 }, // Trem a vapor vs. Trem-bala
+  { prompt: "Qual representa o presente?", options: ["📺", "💻"], correctIndex: 1 }, // TV antiga vs. Computador
+  { prompt: "Qual é mais moderno?", options: ["📞", "📱"], correctIndex: 1 }, // Telefone fixo vs. Smartphone
+  { prompt: "Qual representa o passado?", options: ["🛶", "🚤"], correctIndex: 0 }, // Canoa vs. Barco a motor
+  { prompt: "Qual usamos hoje?", options: ["📷", "📱"], correctIndex: 1 }, // Câmera analógica vs. Smartphone
+  { prompt: "Qual é mais antigo?", options: ["🕯", "💡"], correctIndex: 0 }, // Vela vs. Lâmpada
+  { prompt: "Qual representa o presente?", options: ["📚", "📱"], correctIndex: 1 }, // Livro físico vs. Smartphone (e-book)
+  { prompt: "Qual representa o passado?", options: ["📜", "🧻"], correctIndex: 0 }, // Pergaminho vs. Papel
+  { prompt: "Qual é mais moderno?", options: ["🧮", "🖥"], correctIndex: 1 }, // Ábaco vs. Computador
+  { prompt: "Qual usamos hoje?", options: ["💾", "☁️"], correctIndex: 1 }, // Disquete vs. Nuvem
+  { prompt: "Qual representa o passado?", options: ["🪕", "🎸"], correctIndex: 0 }, // Banjo vs. Guitarra elétrica
+  { prompt: "Qual é mais antigo?", options: ["🖋", "🖊"], correctIndex: 0 }, // Pena vs. Caneta esferográfica
+  { prompt: "Qual representa o presente?", options: ["🛍", "💳"], correctIndex: 1 }, // Saco de compras vs. Cartão de crédito
+  { prompt: "Qual usamos hoje?", options: ["📠", "📧"], correctIndex: 1 }, // Fax vs. E-mail
+  { prompt: "Qual é mais moderno?", options: ["🎥", "📹"], correctIndex: 1 }, // Câmera de filme vs. Câmera digital
+  { prompt: "Qual representa o passado?", options: ["📟", "📱"], correctIndex: 0 }, // Pager vs. Smartphone
+  { prompt: "Qual é mais antigo?", options: ["🧵", "🪡"], correctIndex: 0 }, // Fio e agulha manual vs. Máquina de costura
+  { prompt: "Qual representa o presente?", options: ["📻", "🎧"], correctIndex: 1 }, // Rádio vs. Fones de ouvido
+  { prompt: "Qual usamos hoje?", options: ["📕", "📲"], correctIndex: 1 }, // Livro físico vs. Celular (e-book)
+  { prompt: "Qual é mais moderno?", options: ["🚗", "🚙"], correctIndex: 1 }, // Carro antigo vs. Carro elétrico
+  { prompt: "Qual representa o passado?", options: ["🧳", "🎒"], correctIndex: 0 }, // Mala antiga vs. Mochila moderna
+  { prompt: "Qual é mais antigo?", options: ["🛏", "🛋"], correctIndex: 0 }, // Cama antiga vs. Sofá moderno
+  { prompt: "Qual representa o presente?", options: ["📺", "📱"], correctIndex: 1 }, // TV antiga vs. Smartphone
+  { prompt: "Qual usamos hoje?", options: ["🖨", "📱"], correctIndex: 1 }, // Impressora antiga vs. Smartphone
+  { prompt: "Qual é mais moderno?", options: ["📀", "🎵"], correctIndex: 1 }, // CD vs. Streaming de música
+  { prompt: "Qual representa o passado?", options: ["📞", "📱"], correctIndex: 0 }, // Telefone fixo vs. Smartphone
+  { prompt: "Qual é mais antigo?", options: ["📽", "📺"], correctIndex: 0 }, // Projetor antigo vs. Televisão
+  { prompt: "Qual representa o presente?", options: ["💿", "☁️"], correctIndex: 1 }, // DVD vs. Armazenamento em nuvem
+  { prompt: "Qual usamos hoje?", options: ["🗝", "🔒"], correctIndex: 1 }, // Chave antiga vs. Fechadura eletrônica
+  { prompt: "Qual é mais moderno?", options: ["🛒", "🛍"], correctIndex: 1 }, // Carrinho de compras vs. Compra online
+  { prompt: "Qual representa o passado?", options: ["📘", "📱"], correctIndex: 0 }, // Caderno vs. Smartphone
+  { prompt: "Qual é mais antigo?", options: ["🕰", "⌚"], correctIndex: 0 }, // Relógio de parede vs. Smartwatch
+  { prompt: "Qual representa o presente?", options: ["📷", "📸"], correctIndex: 1 }, // Câmera antiga vs. Câmera digital
+  { prompt: "Qual usamos hoje?", options: ["📬", "📧"], correctIndex: 1 }, // Caixa de correio vs. E-mail
+  { prompt: "Qual é mais moderno?", options: ["🖌", "🖱"], correctIndex: 1 }, // Pincel vs. Mouse
+  { prompt: "Qual representa o passado?", options: ["📼", "📺"], correctIndex: 0 } // Fita cassete vs. Smart TV
+];
+    let currentQuestionIndex = Math.floor(Math.random() * questions.length);
+    let questionAnswered = false;
+    let score = 0;
+    let totalAnswered = 0;
+
+    function loadQuestion() {
+      const q = questions[currentQuestionIndex];
+      document.getElementById("question").textContent = q.prompt;
+      document.getElementById("option1").textContent = q.options[0];
+      document.getElementById("option2").textContent = q.options[1];
+      document.getElementById("feedback").textContent = "";
+
+      document.getElementById("option1").className = "option";
+      document.getElementById("option2").className = "option";
+
+      questionAnswered = false;
+    }
+
+    function checkAnswer(index) {
+      if (questionAnswered) return;
+      questionAnswered = true;
+
+      const q = questions[currentQuestionIndex];
+      const correct = q.correctIndex;
+
+      if (index === correct) score++;
+      totalAnswered++;
+
+      document.getElementById("option1").classList.add(correct === 0 ? "correct" : "incorrect");
+      document.getElementById("option2").classList.add(correct === 1 ? "correct" : "incorrect");
+
+      document.getElementById("feedback").textContent = index === correct
+        ? `✅ Muito bem! Pontuação: ${score}/${totalAnswered}`
+        : `❌ Ops! Tente outra vez. Pontuação: ${score}/${totalAnswered}`;
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+      loadQuestion();
+    }
+
+    function shuffleQuestion() {
+      currentQuestionIndex = Math.floor(Math.random() * questions.length);
+      loadQuestion();
+    }
+
+    function voltar() {
+      window.location.href = "historia.html";
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

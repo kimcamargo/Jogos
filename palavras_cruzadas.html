@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palavras Cruzadas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+    td {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #333;
+      text-align: center;
+      vertical-align: middle;
+    }
+    input[type="text"] {
+      width: 100%;
+      height: 100%;
+      border: none;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .correto {
+      background-color: #c8e6c9;
+    }
+    .erro {
+      background-color: #ffcdd2;
+    }
+    .botoes {
+      margin-top: 20px;
+    }
+    .botoes button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+    .botoes button:hover {
+      background-color: #2980b9;
+    }
+    .resultado {
+      margin-top: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔎 Palavras Cruzadas</h1>
+  <div id="cruzadas"></div>
+
+  <div class="botoes">
+    <button onclick="corrigir()">Corrigir</button>
+    <button onclick="novaRodada()">Nova Rodada</button>
+    <button onclick="window.location.href='index.html'">Voltar</button>
+  </div>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const bancoPalavras = [
+      "banana", "gato", "sapo", "livro", "bola", "macaco", "boneca", "mesa", "papel", "cadeira",
+      "janela", "telefone", "escola", "computador", "chave", "avião", "bicicleta", "tigre", "jacaré", "tapete",
+      "almofada", "geladeira", "fogão", "prato", "garfo", "colher", "camisa", "calça", "sapato", "meia",
+      "brinquedo", "pato", "coelho", "urso", "girafa", "leão", "pintinho", "mamadeira", "berço", "travesseiro",
+      "chuveiro", "espelho", "escova", "sabão", "toalha", "creme", "perfume", "roupa", "anel", "brinco",
+      "óculos", "relógio", "cadeado", "trator", "barco", "navio", "ônibus", "carro", "moto", "estrada",
+      "ponte", "igreja", "mercado", "praça", "parque", "maca", "dentista", "hospital", "remédio", "farmácia",
+      "caneta", "lápis", "borracha", "caderno", "mochila", "tinta", "livraria", "biblioteca", "quadro", "giz",
+      "tênis", "boné", "guarda-chuva", "raquete", "violão", "piano", "flauta", "bateria", "escada", "porta"
+    ];
+
+    let respostas = [];
+
+    function novaRodada() {
+      const cruzadas = document.getElementById("cruzadas");
+      const resultado = document.getElementById("resultado");
+      resultado.textContent = "";
+      cruzadas.innerHTML = "";
+      respostas = [];
+
+      const sorteadas = [...bancoPalavras].sort(() => 0.5 - Math.random()).slice(0, 10);
+      const table = document.createElement("table");
+
+      sorteadas.forEach(palavra => {
+        const row = document.createElement("tr");
+        const col = document.createElement("td");
+        const index = Math.floor(Math.random() * palavra.length);
+
+        for (let i = 0; i < palavra.length; i++) {
+          const cell = document.createElement("td");
+          if (i === index) {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.maxLength = 1;
+            input.dataset.index = i;
+            input.dataset.palavra = palavra;
+            cell.appendChild(input);
+          } else {
+            cell.textContent = palavra[i];
+          }
+          row.appendChild(cell);
+        }
+
+        respostas.push({ palavra, index });
+        table.appendChild(row);
+      });
+
+      cruzadas.appendChild(table);
+    }
+
+    function corrigir() {
+      const inputs = document.querySelectorAll("input[type=text]");
+      let acertos = 0;
+      let erros = 0;
+      inputs.forEach(input => {
+        const idx = parseInt(input.dataset.index);
+        const palavra = input.dataset.palavra;
+        if (input.value.toLowerCase() === palavra[idx]) {
+          input.classList.remove("erro");
+          input.classList.add("correto");
+          acertos++;
+        } else {
+          input.classList.remove("correto");
+          input.classList.add("erro");
+          erros++;
+        }
+      });
+      document.getElementById("resultado").textContent = `✅ Acertos: ${acertos} | ❌ Erros: ${erros}`;
+    }
+
+    novaRodada();
+  </script>
+</body>
+</html>

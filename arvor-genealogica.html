@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Árvore Genealógica</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #a8edea, #fed6e3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2.4em;
+      color: #2d3436;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 1.1em;
+      color: #555;
+      text-align: center;
+      max-width: 800px;
+      margin-bottom: 30px;
+    }
+
+    .tree {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      position: relative;
+    }
+
+    .generation-label {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #34495e;
+      margin-bottom: 10px;
+    }
+
+    .generation {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .generation-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .box {
+      background: white;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 160px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .box input {
+      width: 100%;
+      font-size: 1em;
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 4px;
+    }
+
+    .label {
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .icon {
+      font-size: 2em;
+      margin-bottom: 4px;
+    }
+
+    .connectors {
+      height: 20px;
+    }
+
+    .line-horizontal {
+      width: 40px;
+      height: 2px;
+      background-color: #636e72;
+      display: inline-block;
+      margin: 0 20px;
+    }
+
+    .line-vertical {
+      width: 2px;
+      height: 30px;
+      background-color: #636e72;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌳 Minha Árvore Genealógica</h1>
+  <div class="subtitle">
+    Esta atividade ajuda você a entender as gerações da sua família. Preencha com os nomes e observe como sua história familiar é formada ao longo do tempo.
+  </div>
+
+  <div class="tree">
+
+    <!-- Geração 1: Avós -->
+    <div class="generation">
+      <div class="generation-label">1ª Geração – Avós</div>
+      <div class="generation-boxes">
+        <div class="box">
+          <div class="icon">👴</div>
+          <div class="label">Avô Paterno</div>
+          <input type="text" placeholder="Nome do avô">
+        </div>
+        <div class="box">
+          <div class="icon">👵</div>
+          <div class="label">Avó Paterna</div>
+          <input type="text" placeholder="Nome da avó">
+        </div>
+        <div class="box">
+          <div class="icon">👴</div>
+          <div class="label">Avô Materno</div>
+          <input type="text" placeholder="Nome do avô">
+        </div>
+        <div class="box">
+          <div class="icon">👵</div>
+          <div class="label">Avó Materna</div>
+          <input type="text" placeholder="Nome da avó">
+        </div>
+      </div>
+    </div>
+
+    <div class="connectors"><div class="line-vertical"></div></div>
+
+    <!-- Geração 2: Pais -->
+    <div class="generation">
+      <div class="generation-label">2ª Geração – Pais</div>
+      <div class="generation-boxes">
+        <div class="box">
+          <div class="icon">👨</div>
+          <div class="label">Pai</div>
+          <input type="text" placeholder="Nome do pai">
+        </div>
+        <div class="box">
+          <div class="icon">👩</div>
+          <div class="label">Mãe</div>
+          <input type="text" placeholder="Nome da mãe">
+        </div>
+      </div>
+    </div>
+
+    <div class="connectors"><div class="line-vertical"></div></div>
+
+    <!-- Geração 3: Criança -->
+    <div class="generation">
+      <div class="generation-label">3ª Geração – Eu</div>
+      <div class="generation-boxes">
+        <div class="box">
+          <div class="icon">🧒</div>
+          <div class="label">Eu</div>
+          <input type="text" placeholder="Seu nome">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

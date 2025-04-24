@@ -2,131 +2,187 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Localização e Direções</title>
+  <title>🛤️ Qual o Melhor Transporte ?</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      margin: 0;
+      background-color: #f3f9ff;
+      text-align: center;
       padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     h1 {
-      color: #2d3436;
+      color: #1565c0;
     }
 
-    .game-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 800px;
-      width: 100%;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      padding: 20px;
-    }
-
-    .instructions {
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .drag-area {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      width: 100%;
-    }
-
-    .item, .target {
-      padding: 12px;
-      border: 2px dashed #74b9ff;
+    .btn {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
       border-radius: 8px;
-      background: #dfe6e9;
-      text-align: center;
-      cursor: grab;
+      cursor: pointer;
+      font-size: 16px;
     }
 
-    .target {
-      min-height: 50px;
-      background: #ffeaa7;
+    .btn:hover {
+      background-color: #0d47a1;
     }
 
-    .result {
+    .pergunta {
+      font-size: 18px;
       margin-top: 20px;
-      font-weight: bold;
+      margin-bottom: 10px;
+      color: #0d47a1;
     }
 
-    @media (max-width: 600px) {
-      .drag-area {
-        grid-template-columns: 1fr;
-      }
+    .opcoes {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .opcao {
+      background-color: #bbdefb;
+      border: 2px solid #1976d2;
+      border-radius: 8px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .opcao:hover {
+      background-color: #90caf9;
+    }
+
+    .feedback {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .acerto { color: #2e7d32; }
+    .erro { color: #c62828; }
+
+    #resultadoFinal {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #1565c0;
     }
   </style>
 </head>
 <body>
 
-<h1>🌍 Localização e Direções</h1>
-<div class="game-container">
-  <div class="instructions">
-    Arraste as palavras para o local correto de acordo com a direção indicada:
-  </div>
-  <div class="drag-area">
-    <div class="item" draggable="true" id="frente">Frente</div>
-    <div class="target" data-answer="frente">Local onde se encontra o quadro da sala</div>
+  <h1>🛤️ Qual o Melhor Transporte?</h1>
+  <p>Escolha o melhor transporte para cada situação!</p>
 
-    <div class="item" draggable="true" id="esquerda">Esquerda</div>
-    <div class="target" data-answer="esquerda">Lado onde fica a janela</div>
+  <div id="quizContainer"></div>
 
-    <div class="item" draggable="true" id="direita">Direita</div>
-    <div class="target" data-answer="direita">Lado onde fica a porta</div>
+  <button class="btn" onclick="iniciarJogo()">🔁 Jogar Novamente</button>
+  <button class="btn" onclick="location.href='geografia.html'">🔙 Voltar</button>
 
-    <div class="item" draggable="true" id="atras">Atrás</div>
-    <div class="target" data-answer="atras">Local onde os alunos sentam</div>
-  </div>
-  <div class="result" id="result"></div>
-</div>
+  <div id="resultadoFinal"></div>
 
-<script>
-  const items = document.querySelectorAll('.item');
-  const targets = document.querySelectorAll('.target');
-  let correct = 0;
+  <script>
+    const bancoQuestoes = [
+      { pergunta: "Pedro vai para a escola, mas está chovendo.", correta: "Ônibus 🚌" },
+      { pergunta: "Joana quer ir ao mercado da esquina.", correta: "A pé 🚶" },
+      { pergunta: "Lucas vai visitar a avó que mora em outro bairro.", correta: "Ônibus 🚌" },
+      { pergunta: "É um dia ensolarado e a escola é perto.", correta: "Bicicleta 🚲" },
+      { pergunta: "O parque está a 10 minutos caminhando.", correta: "A pé 🚶" },
+      { pergunta: "Vai chover e a feira é longe de casa.", correta: "Ônibus 🚌" },
+      { pergunta: "Quer ir à padaria que fica a uma quadra.", correta: "A pé 🚶" },
+      { pergunta: "O campo de futebol é distante e ele está atrasado.", correta: "Ônibus 🚌" },
+      { pergunta: "Hoje está seco e o sol está fraco.", correta: "Bicicleta 🚲" },
+      { pergunta: "A biblioteca fica a 15 minutos de bicicleta.", correta: "Bicicleta 🚲" },
+      { pergunta: "A escola está alagada na rua.", correta: "Ônibus 🚌" },
+      { pergunta: "Vai levar apenas um livro na mochila e o tempo está bom.", correta: "A pé 🚶" },
+      { pergunta: "A praça é logo ali, ao lado da igreja.", correta: "A pé 🚶" },
+      { pergunta: "Vai visitar o zoológico com a turma da escola.", correta: "Ônibus 🚌" },
+      { pergunta: "Está calor e a rua é plana até a escola.", correta: "Bicicleta 🚲" },
+      { pergunta: "Tem que chegar rápido ao médico do outro bairro.", correta: "Ônibus 🚌" },
+      { pergunta: "O shopping fica a 5 minutos de bicicleta.", correta: "Bicicleta 🚲" },
+      { pergunta: "Vai comprar pão na padaria da esquina.", correta: "A pé 🚶" },
+      { pergunta: "Tem que levar uma caixa pesada até o centro.", correta: "Ônibus 🚌" },
+      { pergunta: "O amigo mora duas ruas acima.", correta: "A pé 🚶" },
+      { pergunta: "Vai até a escola num dia seco com pouco trânsito.", correta: "Bicicleta 🚲" },
+      { pergunta: "Chuva forte e mochila cheia de livros.", correta: "Ônibus 🚌" },
+      { pergunta: "A sorveteria fica na próxima rua.", correta: "A pé 🚶" },
+      { pergunta: "A praia está longe e o dia está nublado.", correta: "Ônibus 🚌" },
+      { pergunta: "Dia perfeito, vento leve e sol fraco.", correta: "Bicicleta 🚲" },
+      { pergunta: "Chuva leve e precisa ir ao mercado com a mãe.", correta: "Ônibus 🚌" },
+      { pergunta: "Precisa ir rápido à farmácia da avenida próxima.", correta: "A pé 🚶" },
+      { pergunta: "Dia bonito e passeio no parque próximo.", correta: "Bicicleta 🚲" },
+      { pergunta: "Visita ao dentista do outro lado da cidade.", correta: "Ônibus 🚌" },
+      { pergunta: "Biblioteca fica na próxima esquina.", correta: "A pé 🚶" },
+      { pergunta: "Tempo firme e quer se exercitar no caminho.", correta: "Bicicleta 🚲" },
+      { pergunta: "Precisa ir ao centro carregando materiais.", correta: "Ônibus 🚌" },
+      { pergunta: "Está com pressa para pegar o boletim escolar.", correta: "Bicicleta 🚲" },
+      { pergunta: "Vai com a mãe ao mercado do outro bairro.", correta: "Ônibus 🚌" },
+      { pergunta: "O tempo está bom e a rua tem ciclovia.", correta: "Bicicleta 🚲" },
+      { pergunta: "Escola fica a 3 quarteirões, tempo seco.", correta: "A pé 🚶" },
+      { pergunta: "Chuva forte, muitos materiais na mochila.", correta: "Ônibus 🚌" },
+      { pergunta: "Passeio leve no fim da tarde até a praça.", correta: "A pé 🚶" },
+      { pergunta: "Entrega rápida de lanche a 5 minutos.", correta: "Bicicleta 🚲" },
+      { pergunta: "Vai visitar o shopping com os amigos.", correta: "Ônibus 🚌" },
+    ];
 
-  items.forEach(item => {
-    item.addEventListener('dragstart', e => {
-      e.dataTransfer.setData('text/plain', e.target.id);
-    });
-  });
+    let rodada = [];
+    let perguntaAtual = 0;
+    let acertos = 0;
 
-  targets.forEach(target => {
-    target.addEventListener('dragover', e => {
-      e.preventDefault();
-    });
+    function iniciarJogo() {
+      rodada = bancoQuestoes.sort(() => 0.5 - Math.random()).slice(0, 3);
+      perguntaAtual = 0;
+      acertos = 0;
+      document.getElementById("resultadoFinal").innerHTML = "";
+      mostrarProxima();
+    }
 
-    target.addEventListener('drop', e => {
-      e.preventDefault();
-      const draggedId = e.dataTransfer.getData('text/plain');
-      const draggedEl = document.getElementById(draggedId);
-
-      if (target.dataset.answer === draggedId && !target.classList.contains('done')) {
-        target.appendChild(draggedEl);
-        target.classList.add('done');
-        correct++;
-        if (correct === 4) {
-          document.getElementById('result').textContent = 'Parabéns! Você posicionou todas corretamente!';
-        }
-      } else if (!target.classList.contains('done')) {
-        alert('Ops! Tente novamente!');
+    function mostrarProxima() {
+      const container = document.getElementById("quizContainer");
+      if (perguntaAtual >= rodada.length) {
+        container.innerHTML = "";
+        document.getElementById("resultadoFinal").innerHTML = `✅ Você acertou ${acertos} de 3 situações!`;
+        return;
       }
-    });
-  });
-</script>
+
+      const questao = rodada[perguntaAtual];
+      container.innerHTML = `
+        <div class="pergunta">${questao.pergunta}</div>
+        <div class="opcoes">
+          <div class="opcao" onclick="verificarResposta('Bicicleta 🚲')">Bicicleta 🚲</div>
+          <div class="opcao" onclick="verificarResposta('Ônibus 🚌')">Ônibus 🚌</div>
+          <div class="opcao" onclick="verificarResposta('A pé 🚶')">A pé 🚶</div>
+        </div>
+        <div id="feedback" class="feedback"></div>
+      `;
+    }
+
+    function verificarResposta(resposta) {
+      const questao = rodada[perguntaAtual];
+      const feedbackEl = document.getElementById("feedback");
+
+      if (resposta === questao.correta) {
+        feedbackEl.textContent = "✅ Resposta correta!";
+        feedbackEl.className = "feedback acerto";
+        acertos++;
+      } else {
+        feedbackEl.innerHTML = `❌ Errado! O ideal seria: <strong>${questao.correta}</strong>`;
+        feedbackEl.className = "feedback erro";
+      }
+
+      setTimeout(() => {
+        perguntaAtual++;
+        mostrarProxima();
+      }, 1500);
+    }
+
+    iniciarJogo();
+  </script>
 
 </body>
 </html>

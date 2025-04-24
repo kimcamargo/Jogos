@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Desafios Divertidos!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #dff9fb, #c7ecee);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 25px;
+      color: #2d3436;
+      text-align: center;
+    }
+
+    .question-box {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      max-width: 550px;
+      width: 100%;
+    }
+
+    .question-text {
+      font-size: 1.4em;
+      margin-bottom: 20px;
+    }
+
+    .hint-text {
+      font-size: 1.2em;
+      color: #0984e3;
+      margin: 10px 0;
+    }
+
+    .feedback {
+      font-size: 1.2em;
+      margin: 10px 0;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      font-size: 1.5em;
+      padding: 10px 20px;
+      margin-bottom: 15px;
+      border-radius: 30px;
+      border: 2px solid #00b894;
+      width: 120px;
+      text-align: center;
+      color: #2d3436;
+    }
+
+    button {
+      margin: 8px;
+      padding: 10px 18px;
+      font-size: 1em;
+      border: none;
+      border-radius: 30px;
+      background-color: #00b894;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #55efc4;
+    }
+
+    .back-button {
+      background-color: #636e72;
+    }
+
+    .back-button:hover {
+      background-color: #b2bec3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧒💭 Ajude essa turma a resolver os desafios!</h1>
+
+  <div class="question-box">
+    <div class="question-text" id="pergunta"></div>
+    <input type="number" id="resposta" placeholder="Digite aqui 🎯">
+    <div class="feedback" id="feedback"></div>
+    <div class="hint-text" id="dica" style="display: none;"></div>
+
+    <button onclick="verificarResposta()">✅ Verificar</button>
+    <button onclick="mostrarDica()">💡 Dica</button>
+    <button onclick="trocarPergunta()">🔄 Trocar Pergunta</button>
+    <button class="back-button" onclick="voltar()">⬅ Voltar para matemática</button>
+  </div>
+
+  <script>
+    const perguntas = [
+      // ➕ ADIÇÃO
+      { texto: "João tinha 23 balas, ganhou mais 17. Com quantas ficou?", conta: "23 + 17 = ?", resultado: 40 },
+      { texto: "Ana tinha 35 figurinhas e ganhou mais 24. Quantas tem agora?", conta: "35 + 24 = ?", resultado: 59 },
+      { texto: "Lucas juntou 12 moedas e depois mais 38. Total?", conta: "12 + 38 = ?", resultado: 50 },
+      { texto: "Pedro achou 41 bolinhas e comprou 19. Quantas tem?", conta: "41 + 19 = ?", resultado: 60 },
+      { texto: "Beatriz ganhou 22 livros e depois mais 16. Quantos tem?", conta: "22 + 16 = ?", resultado: 38 },
+      { texto: "Carlos somou 13 com 29. Qual o resultado?", conta: "13 + 29 = ?", resultado: 42 },
+      { texto: "Rafael tinha 40 lápis, ganhou 25. Quantos tem agora?", conta: "40 + 25 = ?", resultado: 65 },
+      { texto: "Clara tinha 11 pirulitos e ganhou 44. Total?", conta: "11 + 44 = ?", resultado: 55 },
+      { texto: "Joana juntou 33 + 14 figurinhas. Quantas tem?", conta: "33 + 14 = ?", resultado: 47 },
+      { texto: "Marcos ganhou 26 bolachas e mais 21. Quantas tem?", conta: "26 + 21 = ?", resultado: 47 },
+
+      // ➖ SUBTRAÇÃO
+      { texto: "João tinha 73 figurinhas, deu 24. Quantas sobraram?", conta: "73 - 24 = ?", resultado: 49 },
+      { texto: "Ana tinha 65 balas, perdeu 13. Ficou com?", conta: "65 - 13 = ?", resultado: 52 },
+      { texto: "Lucas tinha 99 moedas, doou 45. Quantas restaram?", conta: "99 - 45 = ?", resultado: 54 },
+      { texto: "Pedro comprou 87 figurinhas e perdeu 38. Restaram?", conta: "87 - 38 = ?", resultado: 49 },
+      { texto: "Beatriz tinha 78 livros, doou 39. Agora tem?", conta: "78 - 39 = ?", resultado: 39 },
+      { texto: "Carlos somou 94 - 23. Qual o resultado?", conta: "94 - 23 = ?", resultado: 71 },
+      { texto: "Rafael tinha 80 lápis, deu 27. Ficou com?", conta: "80 - 27 = ?", resultado: 53 },
+      { texto: "Clara perdeu 33 de 65 bolinhas. Restaram?", conta: "65 - 33 = ?", resultado: 32 },
+      { texto: "Joana tinha 56 pirulitos, perdeu 16. Ficou com?", conta: "56 - 16 = ?", resultado: 40 },
+      { texto: "Marcos ficou com 88 - 44. Resultado?", conta: "88 - 44 = ?", resultado: 44 },
+
+      // ✖️ MULTIPLICAÇÃO
+      { texto: "João comprou 7 pacotes com 6 balas cada. Total?", conta: "7 × 6 = ?", resultado: 42 },
+      { texto: "Ana tem 9 caixas com 8 figurinhas. Quantas ao todo?", conta: "9 × 8 = ?", resultado: 72 },
+      { texto: "Lucas juntou 5 grupos com 7 moedas. Quantas?", conta: "5 × 7 = ?", resultado: 35 },
+      { texto: "Pedro viu 6 estantes com 9 livros. Total?", conta: "6 × 9 = ?", resultado: 54 },
+      { texto: "Beatriz multiplicou 4 por 11. Resultado?", conta: "4 × 11 = ?", resultado: 44 },
+      { texto: "Carlos plantou 8 linhas com 6 sementes. Total?", conta: "8 × 6 = ?", resultado: 48 },
+      { texto: "Rafael empilhou 3 caixas com 12 itens. Quantos ao todo?", conta: "3 × 12 = ?", resultado: 36 },
+      { texto: "Clara organizou 10 estantes com 5 brinquedos. Total?", conta: "10 × 5 = ?", resultado: 50 },
+      { texto: "Joana fez 6 pilhas com 7 folhas. Quantas folhas?", conta: "6 × 7 = ?", resultado: 42 },
+      { texto: "Marcos tem 11 grupos com 4 bolinhas. Quantas são?", conta: "11 × 4 = ?", resultado: 44 },
+
+      // ➗ DIVISÃO
+      { texto: "João dividiu 56 balas entre 8 amigos. Quantas cada um?", conta: "56 ÷ 8 = ?", resultado: 7 },
+      { texto: "Ana repartiu 72 figurinhas entre 9. Ficou com?", conta: "72 ÷ 9 = ?", resultado: 8 },
+      { texto: "Lucas dividiu 45 moedas em 5 caixas. Cada uma tem?", conta: "45 ÷ 5 = ?", resultado: 9 },
+      { texto: "Pedro separou 64 livros em 8 prateleiras. Cada uma tem?", conta: "64 ÷ 8 = ?", resultado: 8 },
+      { texto: "Beatriz dividiu 81 bombons em 9 pacotes. Quantos por pacote?", conta: "81 ÷ 9 = ?", resultado: 9 },
+      { texto: "Carlos dividiu 36 sementes em 6 vasos. Cada um com?", conta: "36 ÷ 6 = ?", resultado: 6 },
+      { texto: "Rafael repartiu 40 brinquedos em 10 caixas. Quantos por caixa?", conta: "40 ÷ 10 = ?", resultado: 4 },
+      { texto: "Clara dividiu 30 folhas entre 5 alunos. Cada um pegou?", conta: "30 ÷ 5 = ?", resultado: 6 },
+      { texto: "Joana dividiu 24 balas entre 6 crianças. Cada uma ficou com?", conta: "24 ÷ 6 = ?", resultado: 4 },
+      { texto: "Marcos separou 18 carrinhos em 3 estantes. Quantos por estante?", conta: "18 ÷ 3 = ?", resultado: 6 },
+    ];
+
+
+    while (perguntas.length < 50) {
+      perguntas.push(...perguntas.slice(0, 50 - perguntas.length));
+    }
+
+    let perguntaAtual = 0;
+
+    function exibirPergunta() {
+      const q = perguntas[perguntaAtual];
+      document.getElementById('pergunta').textContent = q.texto;
+      document.getElementById('dica').style.display = 'none';
+      document.getElementById('dica').textContent = q.conta;
+      document.getElementById('resposta').value = '';
+      document.getElementById('feedback').textContent = '';
+    }
+
+    function mostrarDica() {
+      document.getElementById('dica').style.display = 'block';
+    }
+
+    function trocarPergunta() {
+      perguntaAtual = Math.floor(Math.random() * perguntas.length);
+      exibirPergunta();
+    }
+
+    function verificarResposta() {
+      const respostaUsuario = parseInt(document.getElementById('resposta').value);
+      const resultadoCorreto = perguntas[perguntaAtual].resultado;
+      const feedback = document.getElementById('feedback');
+      
+      if (isNaN(respostaUsuario)) {
+        feedback.textContent = "Digite um número primeiro!";
+        feedback.style.color = "#d63031";
+        return;
+      }
+
+      if (respostaUsuario === resultadoCorreto) {
+        feedback.textContent = "✅ Muito bem! Você acertou!";
+        feedback.style.color = "green";
+      } else {
+        feedback.textContent = "❌ Opa! Não é esse o resultado.";
+        feedback.style.color = "#d63031";
+      }
+    }
+
+    function voltar() {
+      window.location.href = 'matematica.html';
+    }
+
+    exibirPergunta();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Desafio do Mercado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #ffeaa7, #fab1a0);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #2d3436;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .game-box {
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      padding: 25px;
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .objetivo {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+      color: #d63031;
+    }
+
+    .itens {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .item {
+      margin: 6px 0;
+    }
+
+    select {
+      font-size: 1em;
+      padding: 6px;
+      margin: 5px;
+      border-radius: 10px;
+      border: 2px solid #0984e3;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #55efc4;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .back-button {
+      margin-top: 20px;
+      background-color: #636e72;
+    }
+
+    .back-button:hover {
+      background-color: #b2bec3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🛒 Desafio do Mercado</h1>
+
+  <div class="game-box">
+    <div class="objetivo" id="objetivo"></div>
+    <div class="itens" id="lista-itens"></div>
+
+    <div class="selecoes">
+      <label>Escolha seus 3 itens:</label><br>
+      <select id="item1"></select>
+      <select id="item2"></select>
+      <select id="item3"></select>
+    </div>
+
+    <button onclick="verificarCompra()">✅ Verificar Compra</button>
+    <div class="resultado" id="resultado"></div>
+    <button onclick="novaRodada()">🔄 Nova Rodada</button>
+    <button class="back-button" onclick="voltar()">⬅ Voltar para matemática</button>
+  </div>
+
+  <script>
+    const produtos = [
+      { nome: "Maçã", preco: 3 }, { nome: "Banana", preco: 2 }, { nome: "Chocolate", preco: 5 },
+      { nome: "Livro", preco: 20 }, { nome: "Caderno", preco: 15 }, { nome: "Borracha", preco: 1 },
+      { nome: "Lápis", preco: 2 }, { nome: "Pelúcia", preco: 25 }, { nome: "Copo", preco: 8 },
+      { nome: "Chiclete", preco: 1 }, { nome: "Suco", preco: 6 }, { nome: "Sanduíche", preco: 10 },
+      { nome: "Bolacha", preco: 4 }, { nome: "Bola", preco: 18 }, { nome: "Camiseta", preco: 22 },
+      { nome: "Meia", preco: 7 }, { nome: "Caneta", preco: 3 }, { nome: "Estojo", preco: 12 }
+    ];
+
+    const desafios = Array.from({ length: 40 }, () => ({
+      limite: Math.floor(Math.random() * 51) + 30 // entre R$30 e R$80
+    }));
+
+    let rodadaAtual = 0;
+    let itensRodada = [];
+
+    function embaralhar(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function novaRodada() {
+      const desafio = desafios[rodadaAtual];
+      document.getElementById("objetivo").textContent =
+        `Você tem R$${desafio.limite}, escolha 3 itens SEM ultrapassar esse valor.`;
+
+      // Sorteia 6 itens diferentes
+      itensRodada = embaralhar(produtos).slice(0, 6);
+
+      const listaHtml = itensRodada.map(item => `<div class="item">${item.nome} - R$${item.preco}</div>`).join('');
+      document.getElementById("lista-itens").innerHTML = listaHtml;
+
+      const selects = ["item1", "item2", "item3"];
+      selects.forEach(id => {
+        const sel = document.getElementById(id);
+        sel.innerHTML = `<option disabled selected>Escolha um item</option>` +
+          itensRodada.map((item, i) =>
+            `<option value="${i}">${item.nome} - R$${item.preco}</option>`
+          ).join('');
+      });
+
+      document.getElementById("resultado").textContent = "";
+      rodadaAtual = (rodadaAtual + 1) % desafios.length;
+    }
+
+    function verificarCompra() {
+      const sel1 = document.getElementById("item1");
+      const sel2 = document.getElementById("item2");
+      const sel3 = document.getElementById("item3");
+
+      if (sel1.selectedIndex === 0 || sel2.selectedIndex === 0 || sel3.selectedIndex === 0) {
+        document.getElementById("resultado").textContent = "🛑 Por favor, escolha 3 itens antes de verificar.";
+        document.getElementById("resultado").style.color = "red";
+        return;
+      }
+
+      const i1 = itensRodada[sel1.value];
+      const i2 = itensRodada[sel2.value];
+      const i3 = itensRodada[sel3.value];
+
+      const total = i1.preco + i2.preco + i3.preco;
+      const limite = desafios[(rodadaAtual - 1 + desafios.length) % desafios.length].limite;
+      const resultado = document.getElementById("resultado");
+
+      if (total <= limite) {
+        resultado.textContent = `✅ Ótimo! Você gastou R$${total} e sobrou R$${limite - total}.`;
+        resultado.style.color = "green";
+      } else {
+        resultado.textContent = `❌ Oops! Você gastou R$${total}, que ultrapassa o limite de R$${limite}.`;
+        resultado.style.color = "red";
+      }
+    }
+
+    function voltar() {
+      window.location.href = "matematica.html";
+    }
+
+    // Inicial
+    novaRodada();
+  </script>
+
+</body>
+</html>

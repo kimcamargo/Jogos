@@ -193,6 +193,30 @@
     #btn-reiniciar:hover {
       background-color: #558b2f;
     }
+
+      .btn-voltar {
+      display: inline-block;
+      margin: 30px auto;
+      padding: 12px 25px;
+      background-color: #0984e3;
+      color: white;
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-voltar:hover {
+      background-color: #74b9ff;
+      transform: translateY(-2px);
+    }
+    .btn-voltar {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+
   </style>
 </head>
 <body>
@@ -215,7 +239,7 @@
     <div class="parte pernaE" id="pernaE"></div>
     <div class="parte pernaD" id="pernaD"></div>
   </div>
-
+  <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
   <div id="resultado"></div>
   <button id="btn-reiniciar" onclick="reiniciarJogo()">🔁 Jogar Novamente</button>
 

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>♻️ Jogo da Reciclagem</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e0f7fa;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #00796b;
+    }
+
+    .pontuacao {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #004d40;
+    }
+
+    .btns {
+      margin: 20px 0;
+    }
+
+    .btns button {
+      margin: 0 10px;
+      padding: 10px 15px;
+      font-size: 16px;
+      background-color: #009688;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .btns button:hover {
+      background-color: #00796b;
+    }
+
+    .area-jogo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .objetos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .objeto {
+      font-size: 50px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .lixeiras {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .lixeira {
+      border: 2px dashed #00897b;
+      padding: 20px;
+      border-radius: 12px;
+      width: 120px;
+      background-color: #ffffff;
+    }
+
+    .lixeira.hover {
+      background-color: #b2dfdb;
+    }
+
+    .lixeira span {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    #resumo {
+      margin-top: 30px;
+      padding: 20px;
+      border: 2px solid #004d40;
+      border-radius: 12px;
+      background-color: #ffffff;
+      text-align: left;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #resumo h3 {
+      margin-bottom: 10px;
+      color: #00796b;
+    }
+
+    #resumo ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    @media (max-width: 600px) {
+      .lixeiras {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>♻️ Jogo da Reciclagem</h1>
+  <p>Arraste os objetos para as lixeiras corretas!</p>
+  
+
+  <div class="area-jogo">
+    <div class="objetos" id="areaObjetos"></div>
+
+    <div class="lixeiras">
+      <div class="lixeira" data-aceita="papel">
+        <img src="https://aquitemplacas.com.br/img/produtos/p/3367-papel-reciclavel.jpg" alt="Lixeira Azul - Papel" width="64" height="64">
+        <strong>Papel</strong>
+      </div>
+      <div class="lixeira" data-aceita="plastico">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_718580-MLB47964535097_102021-O-10-adesivo-coleta-seletiva-reciclagem-lixo-metal-plastico.webp" alt="Lixeira Vermelha - Plástico" width="64" height="64">
+        <strong>Plástico</strong>
+      </div>
+      <div class="lixeira" data-aceita="vidro">
+        <img src="https://www.zeusdobrasil.com.br/storage/images/cache/adesivo-para-lixeira-reciclavel-vidro-4021-1024-c59dfe14.webp" alt="Lixeira Verde - Vidro" width="64" height="64">
+        <strong>Vidro</strong>
+      </div>
+      <div class="lixeira" data-aceita="metal">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_775969-MLB47964412830_102021-O-10-adesivo-coleta-seletiva-reciclagem-lixo-metal-plastico.webp" alt="Lixeira Amarela - Metal" width="64" height="64">
+        <strong>Metal</strong>
+      </div>
+    </div>
+
+    <div class="btns">
+      <button onclick="location.href='ciencias.html'">🔙 Voltar</button>
+      <button onclick="iniciarJogo()">🔁 Jogar Novamente</button>
+    </div>
+
+    <div id="resumo" style="display:none;"></div>
+  </div>
+
+  <script>
+    const bancoObjetos = [
+      { emoji: "📄", tipo: "papel", titulo: "Folha de Papel" },
+      { emoji: "🧴", tipo: "plastico", titulo: "Garrafa Plástica" },
+      { emoji: "🍾", tipo: "vidro", titulo: "Garrafa de Vidro" },
+      { emoji: "🥫", tipo: "metal", titulo: "Lata de Refrigerante" },
+      // Pode adicionar mais aqui se quiser
+    ];
+
+    let score = 0;
+    let acertos = [];
+    let erros = [];
+    const scoreEl = document.getElementById('score');
+    const objetosContainer = document.getElementById('areaObjetos');
+    const resumoEl = document.getElementById('resumo');
+
+    function iniciarJogo() {
+      score = 0;
+      acertos = [];
+      erros = [];
+      scoreEl.textContent = score;
+      objetosContainer.innerHTML = "";
+      resumoEl.style.display = "none";
+      resumoEl.innerHTML = "";
+
+      const tipos = ["papel", "plastico", "vidro", "metal"];
+      const selecionados = [];
+
+      tipos.forEach(tipo => {
+        const filtrados = bancoObjetos.filter(obj => obj.tipo === tipo);
+        const aleatorio = filtrados[Math.floor(Math.random() * filtrados.length)];
+        selecionados.push(aleatorio);
+      });
+
+      selecionados.forEach(obj => {
+        const div = document.createElement("div");
+        div.className = "objeto";
+        div.textContent = obj.emoji;
+        div.title = obj.titulo;
+        div.setAttribute("draggable", "true");
+        div.dataset.tipo = obj.tipo;
+
+        div.addEventListener("dragstart", e => {
+          e.dataTransfer.setData("tipo", obj.tipo);
+          e.dataTransfer.setData("titulo", obj.titulo);
+        });
+
+        objetosContainer.appendChild(div);
+      });
+    }
+
+    const lixeiras = document.querySelectorAll('.lixeira');
+    lixeiras.forEach(lixeira => {
+      lixeira.addEventListener('dragover', e => {
+        e.preventDefault();
+        lixeira.classList.add('hover');
+      });
+
+      lixeira.addEventListener('dragleave', () => {
+        lixeira.classList.remove('hover');
+      });
+
+      lixeira.addEventListener('drop', e => {
+        e.preventDefault();
+        const tipo = e.dataTransfer.getData('tipo');
+        const titulo = e.dataTransfer.getData('titulo');
+        const aceita = lixeira.dataset.aceita;
+
+        if (tipo === aceita) {
+          score += 10;
+          scoreEl.textContent = score;
+          acertos.push(`✅ ${titulo} (correto em "${aceita}")`);
+        } else {
+          erros.push(`❌ ${titulo} (errado em "${aceita}", deveria ir para "${tipo}")`);
+        }
+
+        const obj = document.querySelector(`.objeto[data-tipo="${tipo}"]`);
+        if (obj) obj.remove();
+
+        lixeira.classList.remove('hover');
+
+        if (document.querySelectorAll('.objeto').length === 0) {
+          mostrarResumo();
+        }
+      });
+    });
+
+    function mostrarResumo() {
+      resumoEl.style.display = "block";
+      resumoEl.innerHTML = `
+        <h3>Resumo da Rodada</h3>
+        <p>Pontuação final: <strong>${score}</strong></p>
+        <h4>Acertos:</h4>
+        <ul>${acertos.map(a => `<li>${a}</li>`).join("")}</ul>
+        <h4>Erros:</h4>
+        <ul>${erros.length ? erros.map(e => `<li>${e}</li>`).join("") : "<li>Nenhum erro!</li>"}</ul>
+      `;
+    }
+
+    iniciarJogo();
+  </script>
+
+</body>
+</html>

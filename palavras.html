@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete a Palavra</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    .palavra-container {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-left: auto;
+      margin-right: auto;
+      width: fit-content;
+    }
+
+    .linha-palavra {
+      display: flex;
+      justify-content: flex-start;
+      gap: 5px;
+      margin: 10px;
+      font-family: monospace;
+    }
+
+    .letra-input {
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .botoes {
+      margin-top: 20px;
+    }
+
+    .botoes button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+    }
+
+    .botoes button:hover {
+      background-color: #2980b9;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .correto {
+      background-color: #c8e6c9;
+    }
+
+    .erro {
+      background-color: #ffcdd2;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧩 Complete a Palavra</h1>
+  <p>Preencha os espaços com as letras corretas para completar as palavras. (10 por rodada)</p>
+
+  <div id="palavraContainer" class="palavra-container"></div>
+
+  <div class="botoes">
+    <button onclick="verificarPalavra()">Verificar</button>
+    <button onclick="mostrarDica()">Dica</button>
+    <button onclick="novaRodada()">Nova Rodada</button>
+    <button onclick="window.location.href='index.html'">Voltar</button>
+  </div>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const palavras = [
+      "banana", "gato", "sapo", "livro", "bola", "macaco", "boneca", "mesa", "papel", "cadeira",
+      "janela", "telefone", "escola", "computador", "chave", "avião", "bicicleta", "tigre", "jacaré", "tapete",
+      "almofada", "geladeira", "fogão", "prato", "garfo", "colher", "camisa", "calça", "sapato", "meia",
+      "brinquedo", "pato", "coelho", "urso", "girafa", "leão", "pintinho", "mamadeira", "berço", "travesseiro",
+      "chuveiro", "espelho", "escova", "sabão", "toalha", "creme", "perfume", "roupa", "anel", "brinco",
+      "óculos", "relógio", "cadeado", "trator", "barco", "navio", "ônibus", "carro", "moto",
+      "estrada", "ponte", "igreja", "mercado", "praça", "parque", "maca", "dentista", "hospital", "remédio",
+      "farmácia", "caneta", "lápis", "borracha", "caderno", "mochila", "tinta", "livraria", "biblioteca", "quadro",
+      "giz", "tênis", "boné", "guarda-chuva", "raquete", "violão", "piano", "flauta", "bateria",
+      "escada", "porta", "teto", "chão", "parede", "quarto", "cozinha", "banheiro",
+      "água", "arroz", "feijão", "café", "suco", "pão", "bolo", "carne", "peixe", "salada",
+      "abacate", "laranja", "melancia", "uva", "pera", "maçã", "kiwi", "morango", "limão", "coco",
+      "sol", "lua", "estrela", "nuvem", "vento", "chuva", "neve", "arco-íris", "céu", "terra",
+      "fogo", "água", "areia", "pedra", "montanha", "floresta", "rio", "lago", "mar", "ilha",
+      "avião", "helicóptero", "caminhão", "trem", "metrô", "bicicleta", "patinete", "patins", "skate", "ônibus",
+      "cachorro", "gato", "papagaio", "hamster", "peixe", "cavalo", "vaca", "porco", "galinha", "pato",
+      "camisa", "blusa", "jaqueta", "casaco", "calça", "bermuda", "shorts", "meia", "sapato", "tênis"
+    ];
+
+    let rodadaPalavras = [];
+    let totalAcertos = 0;
+    let totalErros = 0;
+
+    function novaRodada() {
+      const container = document.getElementById('palavraContainer');
+      const resultado = document.getElementById('resultado');
+      resultado.textContent = '';
+      container.innerHTML = '';
+      rodadaPalavras = [];
+
+      const sorteadas = [...palavras].sort(() => 0.5 - Math.random()).slice(0, 10);
+      sorteadas.forEach(palavra => {
+        rodadaPalavras.push(palavra);
+        const indice = Math.floor(Math.random() * palavra.length);
+
+        const linha = document.createElement('div');
+        linha.className = 'linha-palavra';
+
+        for (let i = 0; i < palavra.length; i++) {
+          if (i === indice) {
+            const input = document.createElement('input');
+            input.className = 'letra-input';
+            input.maxLength = 1;
+            input.dataset.index = i;
+            input.dataset.palavra = palavra;
+            linha.appendChild(input);
+          } else {
+            const span = document.createElement('span');
+            span.textContent = palavra[i];
+            linha.appendChild(span);
+          }
+        }
+
+        container.appendChild(linha);
+      });
+    }
+
+    function verificarPalavra() {
+      const inputs = document.querySelectorAll('.letra-input');
+      let acertos = 0;
+      let erros = 0;
+
+      inputs.forEach(input => {
+        const index = parseInt(input.dataset.index);
+        const palavra = input.dataset.palavra;
+        if (input.value.toLowerCase() === palavra[index]) {
+          input.classList.remove('erro');
+          input.classList.add('correto');
+          acertos++;
+        } else {
+          input.classList.remove('correto');
+          input.classList.add('erro');
+          erros++;
+        }
+      });
+
+      totalAcertos += acertos;
+      totalErros += erros;
+      const resultado = document.getElementById('resultado');
+      resultado.textContent = `🎯 Acertos nesta rodada: ${acertos} | ❌ Erros: ${erros} | ✅ Total: ${totalAcertos} | ❌ Total: ${totalErros}`;
+    }
+
+    function mostrarDica() {
+      const inputs = document.querySelectorAll('.letra-input');
+      inputs.forEach(input => {
+        const index = parseInt(input.dataset.index);
+        const palavra = input.dataset.palavra;
+        input.value = palavra[index];
+        input.classList.add('correto');
+      });
+      const resultado = document.getElementById('resultado');
+      resultado.textContent = '📘 Dica aplicada! Veja as letras corretas preenchidas.';
+      resultado.style.color = 'blue';
+    }
+
+    novaRodada();
+  </script>
+</body>
+</html>

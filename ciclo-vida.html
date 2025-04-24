@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>🌱 Ciclo da Vida</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8e9;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #33691e;
+    }
+
+    .btn {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #558b2f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #33691e;
+    }
+
+    .ciclo {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+      gap: 10px;
+    }
+
+    .etapa {
+      background-color: #c5e1a5;
+      padding: 10px 15px;
+      border: 2px solid #558b2f;
+      border-radius: 8px;
+      cursor: move;
+      font-size: 16px;
+      user-select: none;
+    }
+
+    .resposta {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .slot {
+      background-color: #e8f5e9;
+      border: 2px dashed #a5d6a7;
+      width: 120px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .slot.filled {
+      border-style: solid;
+    }
+
+    #resultadoFinal {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #33691e;
+    }
+
+    #feedback {
+      margin: 15px auto;
+      font-size: 18px;
+      font-weight: bold;
+      color: #33691e;
+    }
+
+    .erro {
+      color: #c62828;
+    }
+
+    .acerto {
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌱 Ciclo da Vida</h1>
+  <p>Arraste as etapas para formar o ciclo correto!</p>
+
+  <div id="jogoContainer"></div>
+
+  <div>
+    <button class="btn" onclick="iniciarJogo()">🔁 Jogar Novamente</button>
+    <button class="btn" onclick="location.href='ciencias.html'">🔙 Voltar</button>
+  </div>
+
+  <div id="resultadoFinal"></div>
+
+  <script>
+    const bancoCiclos = [
+      ["Ovo", "Pintinho", "Galinha"],
+      ["Semente", "Broto", "Planta"],
+      ["Lagarta", "Casulo", "Borboleta"],
+      ["Filhote", "Jovem", "Adulto"],
+      ["Girino", "Sapo Jovem", "Sapo Adulto"],
+      ["Germinante", "Muda", "Árvore"],
+      ["Ovo", "Larva", "Mosca"],
+      ["Botão", "Flor", "Fruto"],
+      ["Semente", "Raiz", "Caule"],
+      ["Ovo", "Ninfa", "Gafanhoto Adulto"],
+      ["Broto", "Folha", "Flor"],
+      ["Coco", "Palmeira Jovem", "Palmeira"],
+      ["Gengibre", "Broto", "Gengibre Adulto"],
+      ["Ovo", "Tartaruguinha", "Tartaruga"],
+      ["Caracolzinho", "Juvenil", "Caracol Adulto"],
+      ["Embrião", "Feto", "Bebê"],
+      ["Larva", "Pupa", "Besouro"],
+      ["Ovo", "Filhote", "Peixe"],
+      ["Ovo", "Filhote", "Jacaré"],
+      ["Semente", "Broto", "Girassol"],
+      ["Germinação", "Crescimento", "Floração"],
+      ["Esporo", "Crescimento", "Fungo Adulto"],
+      ["Folha", "Flor", "Fruto"],
+      ["Inseto Jovem", "Casulo", "Mariposa"],
+      ["Ovo", "Ninfa", "Barata"],
+      ["Flor", "Fruto", "Semente"],
+      ["Crescimento", "Floração", "Frutificação"],
+      ["Nascente", "Riacho", "Rio"],
+      ["Formiga Ovo", "Formiga Jovem", "Formiga Rainha"],
+      ["Abelha Ovo", "Abelha Jovem", "Abelha Rainha"],
+      ["Tubarão Bebê", "Tubarão Jovem", "Tubarão Adulto"],
+      ["Urso Bebê", "Urso Jovem", "Urso Adulto"],
+      ["Cachorro Filhote", "Cachorro Jovem", "Cachorro Adulto"],
+      ["Gato Filhote", "Gato Jovem", "Gato Adulto"],
+      ["Ovo", "Girino", "Rã"],
+      ["Ovo", "Pintinho", "Frango"],
+      ["Semente", "Caule", "Flor"],
+      ["Broto", "Caule", "Folha"],
+      ["Ovo", "Filhote", "Águia"],
+      ["Germinação", "Desenvolvimento", "Flor"],
+      ["Casulo", "Mariposa Jovem", "Mariposa"],
+      ["Flor", "Polinização", "Fruto"],
+      ["Semente", "Árvore", "Maçã"],
+      ["Botão", "Desabrochar", "Flor Aberta"],
+      ["Pulga Ovo", "Pulga Jovem", "Pulga Adulta"],
+      ["Broto", "Folhagem", "Árvore Frondosa"],
+      ["Ovo", "Larva", "Borboleta"],
+      ["Semente", "Germinação", "Folhagem"],
+      ["Ovo", "Peixe Jovem", "Peixe Adulto"],
+      ["Semente", "Raiz", "Folha"]
+    ];
+
+    let ciclosRodada = [];
+    let etapaAtual = 0;
+    let acertos = 0;
+
+    function iniciarJogo() {
+      document.getElementById('resultadoFinal').innerHTML = "";
+      const container = document.getElementById("jogoContainer");
+      container.innerHTML = "";
+      etapaAtual = 0;
+      acertos = 0;
+      ciclosRodada = bancoCiclos.sort(() => 0.5 - Math.random()).slice(0, 10);
+      mostrarProximoCiclo();
+    }
+
+    function mostrarProximoCiclo() {
+      const container = document.getElementById("jogoContainer");
+      container.innerHTML = "";
+
+      if (etapaAtual >= ciclosRodada.length) {
+        mostrarResultado();
+        return;
+      }
+
+      const ciclo = ciclosRodada[etapaAtual];
+      const embaralhado = [...ciclo].sort(() => 0.5 - Math.random());
+
+      const divCiclo = document.createElement("div");
+      divCiclo.className = "ciclo";
+      embaralhado.forEach(etapa => {
+        const elem = document.createElement("div");
+        elem.className = "etapa";
+        elem.draggable = true;
+        elem.textContent = etapa;
+        elem.addEventListener("dragstart", e => {
+          e.dataTransfer.setData("text", etapa);
+        });
+        divCiclo.appendChild(elem);
+      });
+
+      const resposta = document.createElement("div");
+      resposta.className = "resposta";
+      ciclo.forEach(() => {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.addEventListener("dragover", e => e.preventDefault());
+        slot.addEventListener("drop", e => {
+          e.preventDefault();
+          if (slot.classList.contains("filled")) return;
+          const data = e.dataTransfer.getData("text");
+          slot.textContent = data;
+          slot.classList.add("filled");
+        });
+        resposta.appendChild(slot);
+      });
+
+      const feedback = document.createElement("div");
+      feedback.id = "feedback";
+
+      const btnVerificar = document.createElement("button");
+      btnVerificar.className = "btn";
+      btnVerificar.textContent = "Verificar";
+      btnVerificar.onclick = () => {
+        const slots = resposta.querySelectorAll(".slot");
+        const respostaUsuario = [...slots].map(s => s.textContent.trim());
+        const correta = ciclo.join(" → ");
+        const usuario = respostaUsuario.join(" → ");
+
+        if (respostaUsuario.includes("") || respostaUsuario.length !== ciclo.length) {
+          feedback.textContent = "Preencha todos os campos!";
+          feedback.className = "erro";
+          return;
+        }
+
+        if (JSON.stringify(respostaUsuario) === JSON.stringify(ciclo)) {
+          acertos++;
+          feedback.textContent = "✅ Muito bem! Você acertou!";
+          feedback.className = "acerto";
+        } else {
+          feedback.innerHTML = `❌ Errou! <br>Sua resposta: ${usuario}<br>Correta: ${correta}`;
+          feedback.className = "erro";
+        }
+
+        btnVerificar.disabled = true;
+
+        const btnProximo = document.createElement("button");
+        btnProximo.className = "btn";
+        btnProximo.textContent = "Próximo";
+        btnProximo.onclick = () => {
+          etapaAtual++;
+          mostrarProximoCiclo();
+        };
+
+        container.appendChild(feedback);
+        container.appendChild(btnProximo);
+      };
+
+      container.appendChild(divCiclo);
+      container.appendChild(resposta);
+      container.appendChild(btnVerificar);
+    }
+
+    function mostrarResultado() {
+      document.getElementById("resultadoFinal").innerHTML = `
+        ✅ Você acertou ${acertos} de 10 ciclos!
+        <br><br>
+        🌱 Parabéns por estudar os ciclos da vida!
+      `;
+    }
+
+    iniciarJogo();
+  </script>
+
+</body>
+</html>

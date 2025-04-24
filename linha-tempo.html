@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linha do Tempo Interativa</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #2d3436;
+    }
+
+    .linha-do-tempo {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+      gap: 15px;
+    }
+
+    .slot {
+      width: 160px;
+      height: 60px;
+      border: 2px dashed #b2bec3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      background-color: #dfe6e9;
+      text-align: center;
+      padding: 4px;
+    }
+
+    .cartoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .cartao {
+      background-color: #ffeaa7;
+      padding: 10px 14px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: grab;
+      font-weight: bold;
+    }
+
+    .cartao.dragging {
+      opacity: 0.5;
+    }
+
+    .resultado {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .botoes {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #55efc4;
+    }
+
+    .back-button {
+      background-color: #636e72;
+    }
+
+    .back-button:hover {
+      background-color: #b2bec3;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧭 Linha do Tempo Interativa</h1>
+  <p>Arraste os acontecimentos para a ordem correta da sua vida.</p>
+
+  <div class="linha-do-tempo" id="linha-tempo">
+    <div class="slot" data-ordem="0"></div>
+    <div class="slot" data-ordem="1"></div>
+    <div class="slot" data-ordem="2"></div>
+    <div class="slot" data-ordem="3"></div>
+    <div class="slot" data-ordem="4"></div>
+  </div>
+
+  <div class="cartoes" id="cartoes"></div>
+
+  <div class="botoes">
+    <button onclick="verificar()">Verificar Ordem</button>
+    <button onclick="recomecar()">Recomeçar</button>
+    <button class="back-button" onclick="window.location.href='historia.html'">Voltar para História</button>
+  </div>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    const bancoDeOrdens = [
+      ["Nasci", "Aprendi a engatinhar", "Aprendi a andar", "Aprendi a falar", "Entrei na escola"],
+      ["Nasci", "Aprendi a usar o banheiro", "Aprendi a escovar os dentes", "Entrei na escola", "Aprendi a ler"],
+      ["Nasci", "Aprendi a falar", "Entrei na creche", "Conheci a professora", "Fiz minha primeira atividade"],
+      ["Nasci", "Aprendi a segurar lápis", "Desenhei pela primeira vez", "Escrevi meu nome", "Ganhei estrelinha"],
+      ["Nasci", "Fui para a escola", "Aprendi as cores", "Aprendi os números", "Aprendi a somar"],
+      ["Nasci", "Entrei na escola", "Fiz amigos", "Participei de uma apresentação", "Ganhei elogio da professora"],
+      ["Nasci", "Aprendi a andar", "Fui para a escola", "Aprendi a respeitar a fila", "Fui escolhido como ajudante do dia"],
+      ["Nasci", "Entrei na escola", "Aprendi a contar", "Aprendi a somar", "Aprendi a subtrair"],
+      ["Nasci", "Aprendi a falar", "Fiz minha primeira leitura", "Ganhei medalha de leitura", "Recebi certificado"],
+      ["Nasci", "Entrei na escola", "Aprendi a cantar", "Participei de coral", "Apresentei para os pais"]
+    ];
+
+    let ordemCorreta = [];
+
+    function embaralharArray(array) {
+      return array.map(value => ({ value, sort: Math.random() }))
+                  .sort((a, b) => a.sort - b.sort)
+                  .map(({ value }) => value);
+    }
+
+    function carregarNovaRodada() {
+      document.getElementById('resultado').textContent = '';
+      ordemCorreta = bancoDeOrdens[Math.floor(Math.random() * bancoDeOrdens.length)];
+
+      document.querySelectorAll('.slot').forEach(slot => {
+        slot.innerHTML = '';
+        slot.style.backgroundColor = '#dfe6e9';
+      });
+      const container = document.getElementById('cartoes');
+      container.innerHTML = '';
+
+      const cartas = embaralharArray([...ordemCorreta]);
+      cartas.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'cartao';
+        card.textContent = item;
+        card.setAttribute('draggable', true);
+        card.dataset.valor = item;
+        container.appendChild(card);
+      });
+
+      aplicarEventosDragDrop();
+    }
+
+    function aplicarEventosDragDrop() {
+      document.querySelectorAll('.cartao').forEach(cartao => {
+        cartao.addEventListener('dragstart', () => {
+          cartao.classList.add('dragging');
+        });
+        cartao.addEventListener('dragend', () => {
+          cartao.classList.remove('dragging');
+        });
+      });
+
+      document.querySelectorAll('.slot').forEach(slot => {
+        slot.addEventListener('dragover', e => {
+          e.preventDefault();
+          const dragging = document.querySelector('.dragging');
+          if (dragging && slot.children.length === 0) {
+            slot.appendChild(dragging);
+          }
+        });
+      });
+    }
+
+    function verificar() {
+      const slots = document.querySelectorAll('.slot');
+      const resultado = document.getElementById('resultado');
+
+      let resposta = Array.from(slots).map((slot, index) => {
+        const cartao = slot.querySelector('.cartao');
+        const respostaTexto = cartao ? cartao.dataset.valor.trim().toLowerCase() : '';
+        const corretoTexto = ordemCorreta[index].trim().toLowerCase();
+
+        slot.style.backgroundColor = respostaTexto === corretoTexto ? '#d4edda' : '#f8d7da';
+        return respostaTexto === corretoTexto;
+      });
+
+      const todosCorretos = resposta.every(Boolean);
+      resultado.textContent = todosCorretos
+        ? '✅ Muito bem! Tudo está na ordem correta!'
+        : '❌ Ops! Há algo fora de ordem. Confira os destaques em vermelho.';
+    }
+
+    function recomecar() {
+      carregarNovaRodada();
+    }
+
+    carregarNovaRodada();
+  </script>
+</body>
+</html>

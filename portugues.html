@@ -23,15 +23,22 @@
       color: #2d3436;
     }
 
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1100px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
     .card-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
       justify-content: center;
-      padding: 20px;
+      gap: 20px;
       width: 100%;
-      max-width: 1000px;
-      box-sizing: border-box;
     }
 
     .card {
@@ -76,7 +83,7 @@
 
     .btn-voltar {
       display: inline-block;
-      margin: 30px auto;
+      margin-top: 40px;
       padding: 12px 25px;
       background-color: #0984e3;
       color: white;
@@ -118,33 +125,55 @@
 
   <h1>📖 Jogos de Português</h1>
 
-  <div class="card-container">
-    <!-- Card 1 - Jogo da Forca -->
-    <a href="forca.html" class="card">
-      <div class="card-img-wrapper">
-        <img src="Image/portugues.png" alt="Jogo da Forca">
-      </div>
-      <h2>Jogo da Forca</h2>
-    </a>
+  <div class="content-wrapper">
+    <div class="card-container">
+      <!-- Card 1 -->
+      <a href="forca.html" class="card">
+        <div class="card-img-wrapper">
+          <img src="Image/portugues.png" alt="Jogo da Forca">
+        </div>
+        <h2>Jogo da Forca</h2>
+      </a>
 
-    <!-- Card 2 - Jogo das Sílabas -->
-    <a href="silabas.html" class="card">
-      <div class="card-img-wrapper">
-        <img src="Image/portugues.png" alt="Jogo das Sílabas">
-      </div>
-      <h2>Jogo das Sílabas</h2>
-    </a>
+      <!-- Card 2 -->
+      <a href="silabas.html" class="card">
+        <div class="card-img-wrapper">
+          <img src="Image/portugues.png" alt="Jogo das Sílabas">
+        </div>
+        <h2>Jogo das Sílabas</h2>
+      </a>
 
-    <!-- Card 3 - Em breve -->
-    <div class="card">
-      <div class="card-img-wrapper">
-        <img src="Image/portugues.png" alt="Em breve">
-      </div>
-      <h2>Em breve</h2>
+      <!-- Card 3 -->
+      <a href="palavras.html" class="card">
+        <div class="card-img-wrapper">
+          <img src="Image/portugues.png" alt="Jogo das Palavras">
+        </div>
+        <h2>Jogo das Palavras</h2>
+      </a>
+
+      <!-- Card 4 -->
+      <a href="palavras_cruzadas.html" class="card">
+        <div class="card-img-wrapper">
+          <img src="Image/portugues.png" alt="Jogo das Palavras Cruzadas">
+        </div>
+        <h2>Jogo das Palavras Cruzadas</h2>
+      </a>
+
+       <a href="verbos-substantivos.html" class="card">
+        <div class="card-img-wrapper">
+          <img src="Image/portugues.png" alt="verbos, substantivos comuns e próprios">
+        </div>
+        <h2>Verbos, substantivos comuns e próprios</h2>
+      </a>
+
     </div>
-  </div>
 
-  <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
+
+    
+
+    <!-- Botão Voltar -->
+    <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
+  </div>
 
 </body>
 </html>
