@@ -16,6 +16,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      text-transform: uppercase; /* aplica caixa alta em todo o texto */
     }
 
     h1 {
@@ -161,17 +162,17 @@
     function checkAnswer(selected) {
       const feedback = document.getElementById('feedback');
       if (selected === currentQuestion.answer) {
-        feedback.textContent = '🎉 Acertou! Parabéns!';
+        feedback.textContent = '🎉 ACERTOU! PARABÉNS!';
         feedback.style.color = 'green';
       } else {
-        feedback.textContent = `❌ Errou! A resposta certa é: "${currentQuestion.answer}"`;
+        feedback.textContent = `❌ ERROU! A RESPOSTA CERTA É: "${currentQuestion.answer}"`;
         feedback.style.color = 'red';
       }
     }
 
     function showHint() {
       if (!hintShown) {
-        alert("💡 Dica: " + currentQuestion.hint);
+        alert("💡 DICA: " + currentQuestion.hint.toUpperCase());
         hintShown = true;
       }
     }
