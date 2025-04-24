@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Figuras Geométricas Espaciais</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(to top right, #f6d365, #fda085);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px #333;
+      margin: 20px 0 10px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+
+    canvas {
+      background: #f0f0f0;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 18px;
+      border: none;
+      background-color: #00b4d8;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .options button:hover {
+      background-color: #0077b6;
+    }
+
+    .feedback {
+      font-size: 18px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      margin: 5px;
+      padding: 10px 16px;
+      background: #ef476f;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .buttons button:hover {
+      background: #c9184a;
+    }
+
+    #score, #rodada {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Figuras Espaciais</h1>
+  <div class="container">
+    <canvas id="figuraCanvas" width="300" height="200"></canvas>
+    <div id="rodada"></div>
+    <div id="score">✅ ACERTOS: 0 | ❌ ERROS: 0</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="buttons">
+      <button onclick="showHint()">💡 Dica</button>
+      <button onclick="loadNewQuestion()">🔁 Jogar Novamente</button>
+      <button onclick="location.href='matematica.html'">🔙 Voltar</button>
+    </div>
+  </div>
+
+  <script>
+    const figuras = [
+      {
+        nome: "CUBO",
+        desenhar: function(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+          ctx.strokeStyle = "#333";
+          ctx.strokeRect(80, 50, 60, 60);
+          ctx.strokeRect(100, 70, 60, 60);
+          ctx.beginPath();
+          ctx.moveTo(80, 50);
+          ctx.lineTo(100, 70);
+          ctx.moveTo(140, 50);
+          ctx.lineTo(160, 70);
+          ctx.moveTo(80, 110);
+          ctx.lineTo(100, 130);
+          ctx.moveTo(140, 110);
+          ctx.lineTo(160, 130);
+          ctx.stroke();
+        },
+        dica: "TEM 6 FACES QUADRADAS IGUAIS"
+      },
+      {
+        nome: "CILINDRO",
+        desenhar: function(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+          ctx.beginPath();
+          ctx.ellipse(150, 60, 50, 20, 0, 0, Math.PI * 2);
+          ctx.moveTo(100, 60);
+          ctx.lineTo(100, 140);
+          ctx.moveTo(200, 60);
+          ctx.lineTo(200, 140);
+          ctx.ellipse(150, 140, 50, 20, 0, 0, Math.PI);
+          ctx.stroke();
+        },
+        dica: "PARECE UMA LATA DE REFRIGERANTE"
+      },
+      {
+        nome: "CONE",
+        desenhar: function(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+          ctx.beginPath();
+          ctx.moveTo(150, 40);
+          ctx.lineTo(100, 140);
+          ctx.lineTo(200, 140);
+          ctx.closePath();
+          ctx.moveTo(100, 140);
+          ctx.ellipse(150, 140, 50, 15, 0, 0, Math.PI);
+          ctx.stroke();
+        },
+        dica: "TEM BASE CIRCULAR E PONTA"
+      },
+      {
+        nome: "ESFERA",
+        desenhar: function(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+          ctx.beginPath();
+          ctx.arc(150, 100, 50, 0, Math.PI * 2);
+          ctx.stroke();
+        },
+        dica: "PARECE UMA BOLA"
+      },
+      {
+        nome: "PARALELEPÍPEDO",
+        desenhar: function(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+          ctx.strokeRect(80, 50, 90, 50);
+          ctx.strokeRect(100, 70, 90, 50);
+          ctx.beginPath();
+          ctx.moveTo(80, 50);
+          ctx.lineTo(100, 70);
+          ctx.moveTo(170, 50);
+          ctx.lineTo(190, 70);
+          ctx.moveTo(80, 100);
+          ctx.lineTo(100, 120);
+          ctx.moveTo(170, 100);
+          ctx.lineTo(190, 120);
+          ctx.stroke();
+        },
+        dica: "CAIXA DE SAPATO TEM ESSE FORMATO"
+      },
+      {
+        nome: "PIRÂMIDE",
+        desenhar: function(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+          ctx.beginPath();
+          ctx.moveTo(150, 40);
+          ctx.lineTo(100, 140);
+          ctx.lineTo(200, 140);
+          ctx.closePath();
+          ctx.moveTo(150, 40);
+          ctx.lineTo(150, 140);
+          ctx.stroke();
+        },
+        dica: "ENCONTRADA NO EGITO"
+      }
+    ];
+
+    let acertos = 0;
+    let erros = 0;
+    let rodada = 1;
+    const totalRodadas = 6;
+    let respondeu = false;
+    let figuraAtual;
+
+    function updateScore() {
+      document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
+      document.getElementById("rodada").textContent = `🔄 RODADA ${rodada} DE ${totalRodadas}`;
+    }
+
+    function loadNewQuestion() {
+      if (rodada > totalRodadas) {
+        document.getElementById("question").textContent = "FIM DO JOGO!";
+        document.getElementById("feedback").textContent = `ACERTOS: ${acertos} | ERROS: ${erros}`;
+        return;
+      }
+
+      respondeu = false;
+      const canvas = document.getElementById("figuraCanvas");
+      const ctx = canvas.getContext("2d");
+
+      figuraAtual = figuras[Math.floor(Math.random() * figuras.length)];
+      figuraAtual.desenhar(ctx);
+
+      const opcoes = [...new Set([figuraAtual.nome, ...figuras.map(f => f.nome)])];
+      const embaralhadas = opcoes.sort(() => Math.random() - 0.5).slice(0, 3);
+      if (!embaralhadas.includes(figuraAtual.nome)) embaralhadas[0] = figuraAtual.nome;
+      embaralhadas.sort(() => Math.random() - 0.5);
+
+      const optDiv = document.getElementById("options");
+      optDiv.innerHTML = '';
+      embaralhadas.forEach(op => {
+        const btn = document.createElement("button");
+        btn.textContent = op;
+        btn.onclick = () => checkAnswer(op);
+        optDiv.appendChild(btn);
+      });
+
+      document.getElementById("feedback").textContent = '';
+      updateScore();
+    }
+
+    function checkAnswer(op) {
+      if (respondeu) return;
+      respondeu = true;
+      const fb = document.getElementById("feedback");
+      if (op === figuraAtual.nome) {
+        acertos++;
+        fb.textContent = "🎉 ACERTOU!";
+        fb.style.color = "green";
+      } else {
+        erros++;
+        fb.textContent = `❌ ERROU! ERA: ${figuraAtual.nome}`;
+        fb.style.color = "red";
+      }
+      rodada++;
+    }
+
+    function showHint() {
+      alert("💡 DICA: " + figuraAtual.dica);
+    }
+
+    window.onload = () => loadNewQuestion();
+  </script>
+</body>
+</html>
