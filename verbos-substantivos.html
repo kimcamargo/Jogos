@@ -117,17 +117,38 @@
 
   <script>
     const questions = [
-      { question: "A palavra 'gato' é um exemplo de:", options: ["Verbo", "Substantivo Comum", "Substantivo Próprio"], answer: "Substantivo Comum", hint: "Nome de animal genérico" },
-      { question: "A palavra 'comer' é um exemplo de:", options: ["Substantivo Comum", "Verbo", "Substantivo Próprio"], answer: "Verbo", hint: "Ação com comida" },
-      { question: "A palavra 'Brasil' é um exemplo de:", options: ["Substantivo Próprio", "Verbo", "Substantivo Comum"], answer: "Substantivo Próprio", hint: "É um país" },
-      { question: "A palavra 'Ana' é um exemplo de:", options: ["Verbo", "Substantivo Comum", "Substantivo Próprio"], answer: "Substantivo Próprio", hint: "É um nome de pessoa" },
-      { question: "A palavra 'pintar' é um exemplo de:", options: ["Verbo", "Substantivo Comum", "Substantivo Próprio"], answer: "Verbo", hint: "Ação com tinta" },
-      { question: "A palavra 'carro' é um exemplo de:", options: ["Substantivo Comum", "Substantivo Próprio", "Verbo"], answer: "Substantivo Comum", hint: "Objeto para transporte" },
-      { question: "A palavra 'Rio de Janeiro' é um exemplo de:", options: ["Verbo", "Substantivo Comum", "Substantivo Próprio"], answer: "Substantivo Próprio", hint: "Nome de uma cidade" },
-      { question: "A palavra 'brincar' é um exemplo de:", options: ["Verbo", "Substantivo Comum", "Substantivo Próprio"], answer: "Verbo", hint: "Atividade divertida" },
-      { question: "A palavra 'caderno' é um exemplo de:", options: ["Substantivo Comum", "Verbo", "Substantivo Próprio"], answer: "Substantivo Comum", hint: "Usado para escrever" },
-      { question: "A palavra 'João' é um exemplo de:", options: ["Substantivo Comum", "Verbo", "Substantivo Próprio"], answer: "Substantivo Próprio", hint: "Nome masculino" }
+      { question: "A PALAVRA 'GATO' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO COMUM", hint: "NOME DE ANIMAL GENÉRICO" },
+      { question: "A PALAVRA 'COMER' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO COM COMIDA" },
+      { question: "A PALAVRA 'BRASIL' É UM EXEMPLO DE:", options: ["SUBSTANTIVO PRÓPRIO", "VERBO", "SUBSTANTIVO COMUM"], answer: "SUBSTANTIVO PRÓPRIO", hint: "É UM PAÍS" },
+      { question: "A PALAVRA 'ANA' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO PRÓPRIO", hint: "É UM NOME DE PESSOA" },
+      { question: "A PALAVRA 'PINTAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO COM TINTA" },
+      { question: "A PALAVRA 'CARRO' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "OBJETO PARA TRANSPORTE" },
+      { question: "A PALAVRA 'RIO DE JANEIRO' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME DE UMA CIDADE" },
+      { question: "A PALAVRA 'BRINCAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "ATIVIDADE DIVERTIDA" },
+      { question: "A PALAVRA 'CADERNO' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO COMUM", hint: "USADO PARA ESCREVER" },
+      { question: "A PALAVRA 'JOÃO' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME MASCULINO" },
+      { question: "A PALAVRA 'PULAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO COM AS PERNAS" },
+      { question: "A PALAVRA 'BOLA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO PRÓPRIO", "SUBSTANTIVO COMUM", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "USADO PARA JOGAR" },
+      { question: "A PALAVRA 'MÔNICA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME DE UMA MENINA" },
+      { question: "A PALAVRA 'DESENHAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO COM LÁPIS OU CANETA" },
+      { question: "A PALAVRA 'ESCOLA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "LUGAR DE APRENDER" },
+      { question: "A PALAVRA 'PAULO' É UM EXEMPLO DE:", options: ["SUBSTANTIVO PRÓPRIO", "VERBO", "SUBSTANTIVO COMUM"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME MASCULINO" },
+      { question: "A PALAVRA 'CORRER' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO RÁPIDA" },
+      { question: "A PALAVRA 'PIPOCA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO COMUM", hint: "COMIDA DE CINEMA" },
+      { question: "A PALAVRA 'LIVRO' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO COMUM", hint: "USADO PARA LER" },
+      { question: "A PALAVRA 'CAMILA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME DE UMA MENINA" },
+      { question: "A PALAVRA 'AJUDAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO DE COLABORAR" },
+      { question: "A PALAVRA 'MESA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "USADA PARA COMER" },
+      { question: "A PALAVRA 'SÃO PAULO' É UM EXEMPLO DE:", options: ["SUBSTANTIVO PRÓPRIO", "VERBO", "SUBSTANTIVO COMUM"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME DE UMA CIDADE" },
+      { question: "A PALAVRA 'DORMIR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO DE DESCANSAR" },
+      { question: "A PALAVRA 'CAMINHAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO DEVAGAR COM AS PERNAS" },
+      { question: "A PALAVRA 'SOFÁ' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "USADO PARA SENTAR" },
+      { question: "A PALAVRA 'LEITE' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "BEBIDA DO CAFÉ DA MANHÃ" },
+      { question: "A PALAVRA 'CHUTAR' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO COM O PÉ" },
+      { question: "A PALAVRA 'FERNANDA' É UM EXEMPLO DE:", options: ["SUBSTANTIVO PRÓPRIO", "SUBSTANTIVO COMUM", "VERBO"], answer: "SUBSTANTIVO PRÓPRIO", hint: "NOME FEMININO" },
+      { question: "A PALAVRA 'TATU' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO", "VERBO"], answer: "SUBSTANTIVO COMUM", hint: "ANIMAL PEQUENO E FOFINHO" }
     ];
+
 
     let currentQuestion = {};
     let hintShown = false;
