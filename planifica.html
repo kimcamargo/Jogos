@@ -1,258 +1,234 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planificações - Figuras Geométricas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formas Geométricas</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     body {
-      font-family: 'Fredoka One', cursive;
-      background: linear-gradient(to top right, #e0c3fc, #8ec5fc);
-      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #dbeafe, #bfdbfe);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
-      text-transform: uppercase;
-    }
-    .container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      max-width: 600px;
-      width: 90%;
+      margin: 0;
       text-align: center;
     }
     h1 {
-      color: #333;
+      color: #1e3a8a;
+      margin: 20px;
     }
-    canvas {
-      background: #f9f9f9;
-      border-radius: 10px;
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+    }
+    .shape-img {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
       margin-bottom: 20px;
     }
-    .options button, .buttons button {
+    .options button {
+      display: block;
       width: 100%;
-      margin: 8px 0;
-      padding: 12px;
-      font-size: 16px;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 18px;
+      background-color: #3b82f6;
+      color: white;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-    }
-    .options button {
-      background-color: #00a8e8;
-      color: white;
+      transition: 0.3s;
     }
     .options button:hover {
-      background-color: #0077b6;
-    }
-    .buttons button {
-      background-color: #ef476f;
-      color: white;
-    }
-    .buttons button:hover {
-      background-color: #c9184a;
+      background-color: #1e40af;
     }
     .feedback {
       font-size: 18px;
       font-weight: bold;
       margin-top: 10px;
     }
+    .celebration {
+      font-size: 22px;
+      color: #16a34a;
+      margin-top: 15px;
+    }
+    .buttons {
+      margin-top: 20px;
+    }
+    .buttons button {
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .buttons button:hover {
+      background-color: #059669;
+    }
   </style>
 </head>
 <body>
+  <h1>Jogo das Formas Geométricas</h1>
   <div class="container">
-    <h1>QUAL É A FIGURA?</h1>
-    <canvas id="canvas" width="300" height="200"></canvas>
-    <div id="score"></div>
+    <div id="progress">Pergunta 1/10</div>
+    <img id="shapeImage" class="shape-img" src="" alt="Forma geométrica">
+    <div id="questionText">Carregando...</div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback"></div>
+    <div class="celebration" id="celebration"></div>
     <div class="buttons">
-      <button onclick="nextQuestion()" id="nextBtn" style="display:none">➡️ Próxima</button>
-      <button onclick="startGame()" id="restartBtn" style="display:none">🔁 Jogar Novamente</button>
+      <button onclick="nextQuestion()" id="nextBtn" style="display:none;">➡ Próxima</button>
+      <button onclick="startGame()" id="restartBtn" style="display:none;">🔁 Jogar Novamente</button>
+      <button onclick="location.href='index.html'">🔙 Voltar</button>
     </div>
   </div>
 
   <script>
-    const figuras = [
+    const questions = [
       {
-        nome: "CUBO",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          for(let i=0;i<4;i++)ctx.strokeRect(80+i*30,80,30,30);
-          ctx.strokeRect(110,50,30,30);
-          ctx.strokeRect(110,110,30,30);
-        }
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Triangle_-_blue.svg",
+        question: "Quantos vértices tem esse triângulo?",
+        options: ["3", "4", "5"],
+        answer: "3"
       },
       {
-        nome: "PIRÂMIDE",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          ctx.strokeRect(120,90,40,40);
-          ctx.beginPath();
-          ctx.moveTo(120,90); ctx.lineTo(100,60); ctx.lineTo(160,90);
-          ctx.moveTo(120,130); ctx.lineTo(100,160); ctx.lineTo(160,130);
-          ctx.moveTo(120,90); ctx.lineTo(90,100); ctx.lineTo(120,130);
-          ctx.moveTo(160,90); ctx.lineTo(190,100); ctx.lineTo(160,130);
-          ctx.stroke();
-        }
+        img: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Square_-_blue.svg",
+        question: "Quantas arestas tem esse quadrado?",
+        options: ["6", "4", "3"],
+        answer: "4"
       },
       {
-        nome: "CILINDRO",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          ctx.strokeRect(90,80,120,40);
-          ctx.beginPath();
-          ctx.arc(90,100,20,0,Math.PI*2); ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(210,100,20,0,Math.PI*2); ctx.stroke();
-        }
+        img: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Hexagon_-_blue.svg",
+        question: "Essa figura é um:",
+        options: ["Pentágono", "Hexágono", "Octógono"],
+        answer: "Hexágono"
       },
       {
-        nome: "PARALELEPÍPEDO",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          for(let i=0;i<4;i++)ctx.strokeRect(60+i*30,80,30,50);
-          ctx.strokeRect(150,30,30,50);
-          ctx.strokeRect(150,130,30,50);
-        }
+        img: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Circle_-_blue.svg",
+        question: "Quantos vértices tem esse círculo?",
+        options: ["0", "1", "2"],
+        answer: "0"
       },
-      
-       
       {
-      nome: "PRISMA RETANGULAR",
-      planificar(ctx) {
-        ctx.clearRect(0, 0, 300, 200);
-        // 4 faces laterais
-        for (let i = 0; i < 4; i++) {
-          ctx.strokeRect(50 + i * 40, 80, 40, 60);
-        }
-        // 2 bases (em cima e embaixo)
-        ctx.strokeRect(130, 20, 40, 60); // base superior
-        ctx.strokeRect(130, 140, 40, 60); // base inferior
+        img: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rectangle_-_blue.svg",
+        question: "Essa figura é um:",
+        options: ["Retângulo", "Trapézio", "Triângulo"],
+        answer: "Retângulo"
+      },
+      {
+        img: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pentagon_-_blue.svg",
+        question: "Quantas arestas tem esse pentágono?",
+        options: ["4", "5", "6"],
+        answer: "5"
+      },
+      {
+        img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Octagon_-_blue.svg",
+        question: "Quantos vértices tem esse octógono?",
+        options: ["6", "8", "10"],
+        answer: "8"
+      },
+      {
+        img: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Trapezoid_-_blue.svg",
+        question: "Essa figura é um:",
+        options: ["Trapézio", "Quadrado", "Círculo"],
+        answer: "Trapézio"
+      },
+      {
+        img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Parallelogram_-_blue.svg",
+        question: "Essa figura é um:",
+        options: ["Retângulo", "Paralelogramo", "Pentágono"],
+        answer: "Paralelogramo"
+      },
+      {
+        img: "https://upload.wikimedia.org/wikipedia/commons/0/05/Rhombus_-_blue.svg",
+        question: "Essa figura é um:",
+        options: ["Romboide", "Rombo", "Triângulo"],
+        answer: "Rombo"
       }
-    },
-        {
-        nome: "PRISMA TRIANGULAR",
-        planificar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          
-          // 3 retângulos lado a lado
-          for (let i = 0; i < 3; i++) {
-            ctx.strokeRect(60 + i * 50, 80, 50, 30);
-          }
-          
-          // Triângulo acima (base 1)
-          ctx.beginPath();
-          ctx.moveTo(85, 60); // ponta do triângulo
-          ctx.lineTo(60, 80);
-          ctx.lineTo(110, 80);
-          ctx.closePath();
-          ctx.stroke();
-          
-          // Triângulo abaixo (base 2)
-          ctx.beginPath();
-          ctx.moveTo(185, 60); // ponta do triângulo
-          ctx.lineTo(160, 80);
-          ctx.lineTo(210, 80);
-          ctx.closePath();
-          ctx.stroke();
-        }
-      },
-
-      {
-        nome: "PRISMA HEXAGONAL",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          for(let i=0;i<6;i++)ctx.strokeRect(50+i*30,90,30,40);
-        }
-      },
-    {
-      nome: "CONE",
-      planificar(ctx) {
-        ctx.clearRect(0, 0, 300, 200);
-        // Setor circular (superfície lateral)
-        ctx.beginPath();
-        ctx.moveTo(150, 100);
-        ctx.arc(150, 100, 60, Math.PI * 0.2, Math.PI * 1.8); // setor de 288°
-        ctx.closePath();
-        ctx.fillStyle = "#ffd966"; // cor amarela clara
-        ctx.fill();
-        ctx.stroke();
-    
-        // Círculo (base)
-        ctx.beginPath();
-        ctx.arc(250, 160, 20, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffd966";
-        ctx.fill();
-        ctx.stroke();
-      }
-    }
-
-  
     ];
 
     let rodada = [];
     let index = 0;
     let acertos = 0;
 
-    function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
+    function shuffle(array) {
+      return array.sort(() => Math.random() - 0.5);
     }
 
     function startGame() {
-      rodada = shuffle([...figuras]).slice(0, 10);
+      rodada = shuffle([...questions]);
       index = 0;
       acertos = 0;
-      document.getElementById("restartBtn").style.display = "none";
+      document.getElementById('restartBtn').style.display = 'none';
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('celebration').textContent = '';
       nextQuestion();
     }
 
     function nextQuestion() {
-      if (index >= rodada.length) {
-        const nota = Math.round((acertos / rodada.length) * 10);
-        document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${rodada.length - acertos}<br>⭐ NOTA FINAL: ${nota}/10`;
-        document.getElementById("nextBtn").style.display = "none";
-        document.getElementById("restartBtn").style.display = "inline-block";
+      if (index >= 10) {
+        document.getElementById('shapeImage').style.display = 'none';
+        document.getElementById('questionText').textContent = `Fim do jogo! ✅ Acertos: ${acertos}/10`;
+        document.getElementById('options').innerHTML = '';
+        document.getElementById('nextBtn').style.display = 'none';
+        document.getElementById('restartBtn').style.display = 'inline-block';
+        document.getElementById('progress').textContent = 'Rodada finalizada';
+
+        if (acertos === 10) {
+          document.getElementById('celebration').textContent = '🏆 PARABÉNS! NOTA MÁXIMA!';
+          confetti({ particleCount: 150, spread: 70 });
+          confetti({ particleCount: 150, spread: 120, origin: { x: 0.2 } });
+          confetti({ particleCount: 150, spread: 120, origin: { x: 0.8 } });
+        }
+
         return;
       }
-      const fig = rodada[index];
-      fig.planificar(document.getElementById("canvas").getContext("2d"));
-      document.getElementById("feedback").textContent = '';
-      document.getElementById("nextBtn").style.display = "none";
-      const opcoes = shuffle([...figuras.map(f => f.nome)]).slice(0,3);
-      if (!opcoes.includes(fig.nome)) opcoes[0] = fig.nome;
-      shuffle(opcoes);
-      const optDiv = document.getElementById("options");
-      optDiv.innerHTML = '';
-      opcoes.forEach(op => {
-        const btn = document.createElement("button");
+
+      const q = rodada[index];
+      document.getElementById('shapeImage').src = q.img;
+      document.getElementById('shapeImage').style.display = 'block';
+      document.getElementById('questionText').textContent = q.question;
+      document.getElementById('progress').textContent = `Pergunta ${index + 1}/10`;
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('celebration').textContent = '';
+      document.getElementById('nextBtn').style.display = 'none';
+
+      const opt = document.getElementById('options');
+      opt.innerHTML = '';
+
+      shuffle(q.options).forEach(op => {
+        const btn = document.createElement('button');
         btn.textContent = op;
-        btn.onclick = () => verificarResposta(op, fig.nome);
-        optDiv.appendChild(btn);
+        btn.onclick = () => checkAnswer(op, q.answer);
+        opt.appendChild(btn);
       });
-      document.getElementById("score").textContent = `🔢 Pergunta ${index + 1} de ${rodada.length}`;
     }
 
-    function verificarResposta(resposta, correta) {
-      const fb = document.getElementById("feedback");
-      if (resposta === correta) {
+    function checkAnswer(selected, correct) {
+      const fb = document.getElementById('feedback');
+      if (selected === correct) {
         acertos++;
-        fb.textContent = "🎉 ACERTOU!";
-        fb.style.color = "green";
+        fb.textContent = '🎉 ACERTOU!';
+        fb.style.color = 'green';
+        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
       } else {
-        fb.innerHTML = `❌ ERROU! Era: ${correta}`;
-        fb.style.color = "red";
+        fb.textContent = `❌ ERROU! A resposta correta era: ${correct}`;
+        fb.style.color = 'red';
       }
+      document.getElementById('nextBtn').style.display = 'inline-block';
       index++;
-      document.getElementById("nextBtn").style.display = "inline-block";
     }
 
     window.onload = startGame;
