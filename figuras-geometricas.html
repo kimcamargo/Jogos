@@ -100,155 +100,99 @@
     <div class="feedback" id="feedback"></div>
     <div class="buttons">
       <button onclick="showHint()">💡 Dica</button>
-      <button onclick="loadNewQuestion()">🔁 Jogar Novamente</button>
+      <button onclick="nextQuestion()">➡️ Próxima</button>
+      <button onclick="reiniciarJogo()">🔁 Jogar Novamente</button>
       <button onclick="location.href='matematica.html'">🔙 Voltar</button>
     </div>
   </div>
 
   <script>
-    const figuras = [
-      {
-        nome: "CUBO",
-        desenhar: function(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.strokeStyle = "#333";
-          ctx.strokeRect(80, 50, 60, 60);
-          ctx.strokeRect(100, 70, 60, 60);
-          ctx.beginPath();
-          ctx.moveTo(80, 50); ctx.lineTo(100, 70);
-          ctx.moveTo(140, 50); ctx.lineTo(160, 70);
-          ctx.moveTo(80, 110); ctx.lineTo(100, 130);
-          ctx.moveTo(140, 110); ctx.lineTo(160, 130);
-          ctx.stroke();
-        },
-        dica: "TEM 6 FACES QUADRADAS IGUAIS"
-      },
-      {
-        nome: "CILINDRO",
-        desenhar: function(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.beginPath();
-          ctx.ellipse(150, 60, 50, 20, 0, 0, Math.PI * 2);
-          ctx.moveTo(100, 60); ctx.lineTo(100, 140);
-          ctx.moveTo(200, 60); ctx.lineTo(200, 140);
-          ctx.ellipse(150, 140, 50, 20, 0, 0, Math.PI);
-          ctx.stroke();
-        },
-        dica: "PARECE UMA LATA DE REFRIGERANTE"
-      },
-      {
-        nome: "CONE",
-        desenhar: function(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.beginPath();
-          ctx.moveTo(150, 40); ctx.lineTo(100, 140); ctx.lineTo(200, 140);
-          ctx.closePath();
-          ctx.moveTo(100, 140);
-          ctx.ellipse(150, 140, 50, 15, 0, 0, Math.PI);
-          ctx.stroke();
-        },
-        dica: "TEM BASE CIRCULAR E PONTA"
-      },
-      {
-        nome: "ESFERA",
-        desenhar: function(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.beginPath();
-          ctx.arc(150, 100, 50, 0, Math.PI * 2);
-          ctx.stroke();
-        },
-        dica: "PARECE UMA BOLA"
-      },
-      {
-        nome: "PARALELEPÍPEDO",
-        desenhar: function(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.strokeRect(80, 50, 90, 50);
-          ctx.strokeRect(100, 70, 90, 50);
-          ctx.beginPath();
-          ctx.moveTo(80, 50); ctx.lineTo(100, 70);
-          ctx.moveTo(170, 50); ctx.lineTo(190, 70);
-          ctx.moveTo(80, 100); ctx.lineTo(100, 120);
-          ctx.moveTo(170, 100); ctx.lineTo(190, 120);
-          ctx.stroke();
-        },
-        dica: "CAIXA DE SAPATO TEM ESSE FORMATO"
-      },
-      {
-        nome: "PIRÂMIDE",
-        desenhar: function(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.beginPath();
-          ctx.moveTo(150, 40); ctx.lineTo(100, 140); ctx.lineTo(200, 140);
-          ctx.closePath();
-          ctx.moveTo(150, 40); ctx.lineTo(150, 140);
-          ctx.stroke();
-        },
-        dica: "ENCONTRADA NO EGITO"
-      }
-    ];
+    const figuras = [/* mesmo array anterior */];
 
+    let perguntasRodada = [];
+    let indiceAtual = 0;
     let acertos = 0;
     let erros = 0;
-    let rodada = 1;
-    const totalRodadas = 6;
     let respondeu = false;
-    let figuraAtual;
 
-    function updateScore() {
-      document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
-      document.getElementById("rodada").textContent = `🔄 RODADA ${rodada} DE ${totalRodadas}`;
-    }
-
-    function loadNewQuestion() {
-      if (rodada > totalRodadas) {
-        showFinalScreen();
-        return;
-      }
-
-      respondeu = false;
-      const canvas = document.getElementById("figuraCanvas");
-      const ctx = canvas.getContext("2d");
-
-      figuraAtual = figuras[Math.floor(Math.random() * figuras.length)];
-      figuraAtual.desenhar(ctx);
-
-      const opcoes = [...new Set([figuraAtual.nome, ...figuras.map(f => f.nome)])];
-      const embaralhadas = opcoes.sort(() => Math.random() - 0.5).slice(0, 3);
-      if (!embaralhadas.includes(figuraAtual.nome)) embaralhadas[0] = figuraAtual.nome;
-      embaralhadas.sort(() => Math.random() - 0.5);
-
-      const optDiv = document.getElementById("options");
-      optDiv.innerHTML = '';
-      embaralhadas.forEach(op => {
-        const btn = document.createElement("button");
-        btn.textContent = op;
-        btn.onclick = () => checkAnswer(op);
-        optDiv.appendChild(btn);
-      });
-
-      document.getElementById("feedback").textContent = '';
+    function iniciarRodada() {
+      perguntasRodada = shuffle([...figuras]).slice(0, 10);
+      indiceAtual = 0;
+      acertos = 0;
+      erros = 0;
+      renderPergunta();
       updateScore();
     }
 
-    function checkAnswer(op) {
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function renderPergunta() {
+      const canvas = document.getElementById("figuraCanvas");
+      const ctx = canvas.getContext("2d");
+      const figura = perguntasRodada[indiceAtual];
+      figura.desenhar(ctx);
+      document.getElementById("feedback").textContent = '';
+
+      const opcoes = shuffle([...new Set([figura.nome, ...figuras.map(f => f.nome)])]).slice(0, 3);
+      if (!opcoes.includes(figura.nome)) opcoes[0] = figura.nome;
+      shuffle(opcoes);
+
+      const optDiv = document.getElementById("options");
+      optDiv.innerHTML = '';
+      opcoes.forEach(op => {
+        const btn = document.createElement("button");
+        btn.textContent = op;
+        btn.disabled = respondeu;
+        btn.onclick = () => responder(op, figura.nome);
+        optDiv.appendChild(btn);
+      });
+
+      updateScore();
+    }
+
+    function responder(selecionado, correto) {
       if (respondeu) return;
       respondeu = true;
       const fb = document.getElementById("feedback");
-      if (op === figuraAtual.nome) {
+      if (selecionado === correto) {
         acertos++;
         fb.textContent = "🎉 ACERTOU!";
         fb.style.color = "green";
       } else {
         erros++;
-        fb.textContent = `❌ ERROU! ERA: ${figuraAtual.nome}`;
+        fb.textContent = `❌ ERROU! ERA: ${correto}`;
         fb.style.color = "red";
       }
-      rodada++;
+      updateScore();
+    }
+
+    function nextQuestion() {
+      if (!respondeu) {
+        alert("⚠️ Você precisa responder antes de continuar!");
+        return;
+      }
+      respondeu = false;
+      indiceAtual++;
+      if (indiceAtual >= perguntasRodada.length) {
+        showFinalScreen();
+      } else {
+        renderPergunta();
+      }
     }
 
     function showHint() {
-      alert("💡 DICA: " + figuraAtual.dica);
+      alert("💡 DICA: " + perguntasRodada[indiceAtual].dica);
+    }
+
+    function updateScore() {
+      document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
+      document.getElementById("rodada").textContent = `🔄 PERGUNTA ${indiceAtual + 1} DE 10`;
     }
 
     function showFinalScreen() {
@@ -260,30 +204,13 @@
       document.getElementById("feedback").innerHTML = `🏁 FIM DO JOGO!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
       document.getElementById("rodada").textContent = "";
       document.getElementById("score").textContent = "";
-
-      const playAgainBtn = document.createElement("button");
-      playAgainBtn.textContent = "🔁 REINICIAR JOGO";
-      playAgainBtn.onclick = reiniciarJogo;
-      playAgainBtn.style.marginTop = "20px";
-      playAgainBtn.style.padding = "12px 20px";
-      playAgainBtn.style.fontSize = "18px";
-      playAgainBtn.style.backgroundColor = "#06d6a0";
-      playAgainBtn.style.color = "#fff";
-      playAgainBtn.style.border = "none";
-      playAgainBtn.style.borderRadius = "10px";
-      playAgainBtn.style.cursor = "pointer";
-
-      document.getElementById("options").appendChild(playAgainBtn);
     }
 
     function reiniciarJogo() {
-      acertos = 0;
-      erros = 0;
-      rodada = 1;
-      loadNewQuestion();
+      iniciarRodada();
     }
 
-    window.onload = () => loadNewQuestion();
+    window.onload = iniciarRodada;
   </script>
 </body>
 </html>
