@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Figuras Geométricas Espaciais</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Figuras Espaciais</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
   <style>
     body {
@@ -14,79 +14,53 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-transform: uppercase;
       min-height: 100vh;
-    }
-    h1 {
-      color: #fff;
-      font-size: 2.5rem;
-      text-shadow: 2px 2px #333;
-      margin: 20px 0 10px;
+      text-transform: uppercase;
     }
     .container {
       background: #fff;
-      padding: 25px;
+      padding: 20px;
       border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      max-width: 600px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
       width: 90%;
+      max-width: 600px;
       text-align: center;
+    }
+    h1 {
+      color: #fff;
+      text-shadow: 2px 2px #333;
     }
     canvas {
       background: #f0f0f0;
-      border-radius: 12px;
+      border-radius: 10px;
       margin-bottom: 10px;
     }
-    .options button {
-      display: block;
+    .options button, .buttons button {
       width: 100%;
-      margin: 10px 0;
-      padding: 15px;
+      margin: 5px 0;
+      padding: 12px;
       font-size: 18px;
       border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .options button {
       background-color: #00b4d8;
       color: white;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s ease;
     }
     .options button:hover {
       background-color: #0077b6;
     }
-    .feedback {
-      font-size: 18px;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    #infoExtra {
-      font-size: 16px;
-      color: #333;
-      margin-top: 15px;
-      line-height: 1.6;
-    }
-    .buttons {
-      margin-top: 20px;
-    }
     .buttons button {
-      margin: 5px;
-      padding: 10px 16px;
-      background: #ef476f;
+      background-color: #ef476f;
       color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
     }
     .buttons button:hover {
-      background: #c9184a;
+      background-color: #c9184a;
     }
-    #score, #rodada {
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-    #planCanvas {
-      display: none;
-    }
+    #planCanvas { display: none; }
+    .feedback { font-size: 20px; margin-top: 10px; font-weight: bold; }
+    #infoExtra, #score, #rodada { font-size: 16px; margin: 10px 0; }
   </style>
 </head>
 <body>
@@ -95,7 +69,7 @@
     <canvas id="figuraCanvas" width="300" height="200"></canvas>
     <canvas id="planCanvas" width="300" height="200"></canvas>
     <div id="rodada"></div>
-    <div id="score">✅ ACERTOS: 0 | ❌ ERROS: 0</div>
+    <div id="score"></div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback"></div>
     <div id="infoExtra"></div>
@@ -106,82 +80,118 @@
       <button onclick="location.href='matematica.html'">🔙 Voltar</button>
     </div>
   </div>
-
   <script>
     const figuras = [
       {
         nome: "CUBO",
-        dica: "TEM 6 FACES QUADRADAS IGUAIS",
+        dica: "TEM 6 FACES IGUAIS",
         arestas: 12, vertices: 8, faces: 6,
-        planificacao: "Formada por 6 quadrados em cruz.",
+        planificacao: "6 quadrados em cruz",
         desenhar(ctx) {
           ctx.clearRect(0, 0, 300, 200);
           ctx.strokeRect(80, 50, 60, 60);
           ctx.strokeRect(100, 70, 60, 60);
           ctx.beginPath();
-          ctx.moveTo(80,50); ctx.lineTo(100,70);
-          ctx.moveTo(140,50); ctx.lineTo(160,70);
-          ctx.moveTo(80,110); ctx.lineTo(100,130);
-          ctx.moveTo(140,110); ctx.lineTo(160,130);
+          ctx.moveTo(80, 50); ctx.lineTo(100, 70);
+          ctx.moveTo(140, 50); ctx.lineTo(160, 70);
+          ctx.moveTo(80, 110); ctx.lineTo(100, 130);
+          ctx.moveTo(140, 110); ctx.lineTo(160, 130);
           ctx.stroke();
         },
         planificar(ctx) {
           ctx.clearRect(0, 0, 300, 200);
-          for(let i = 0; i < 4; i++) ctx.strokeRect(90+i*40, 80, 40, 40);
-          ctx.strokeRect(130, 40, 40, 40);
-          ctx.strokeRect(130, 120, 40, 40);
-        }
-      },
-      {
-        nome: "CILINDRO",
-        dica: "PARECE UMA LATA DE REFRIGERANTE",
-        arestas: 0, vertices: 0, faces: 3,
-        planificacao: "Um retângulo entre dois círculos.",
-        desenhar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.beginPath();
-          ctx.ellipse(150, 60, 50, 20, 0, 0, 2 * Math.PI);
-          ctx.moveTo(100, 60); ctx.lineTo(100, 140);
-          ctx.moveTo(200, 60); ctx.lineTo(200, 140);
-          ctx.ellipse(150, 140, 50, 20, 0, 0, Math.PI);
-          ctx.stroke();
-        },
-        planificar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.strokeRect(90, 80, 120, 40);
-          ctx.beginPath();
-          ctx.arc(90, 100, 20, 0, 2*Math.PI);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(210, 100, 20, 0, 2*Math.PI);
-          ctx.stroke();
+          for(let i=0;i<4;i++)ctx.strokeRect(90+i*40,80,40,40);
+          ctx.strokeRect(130,40,40,40);
+          ctx.strokeRect(130,120,40,40);
         }
       },
       {
         nome: "CONE",
-        dica: "TEM BASE CIRCULAR E PONTA",
+        dica: "BASE CIRCULAR E PONTA",
         arestas: 1, vertices: 1, faces: 2,
-        planificacao: "Um setor circular e um círculo.",
+        planificacao: "Setor circular e um círculo",
         desenhar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
+          ctx.clearRect(0,0,300,200);
           ctx.beginPath();
-          ctx.moveTo(150, 40);
-          ctx.lineTo(100, 140);
-          ctx.lineTo(200, 140);
+          ctx.moveTo(150,40); ctx.lineTo(100,140); ctx.lineTo(200,140);
           ctx.closePath();
-          ctx.moveTo(100, 140);
-          ctx.ellipse(150, 140, 50, 15, 0, 0, Math.PI);
+          ctx.moveTo(100,140);
+          ctx.ellipse(150,140,50,15,0,0,Math.PI);
           ctx.stroke();
         },
         planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.beginPath();
+          ctx.moveTo(150,100);
+          ctx.arc(150,100,60,0,Math.PI*1.5);
+          ctx.fillStyle="#ccc"; ctx.fill();
+          ctx.beginPath();
+          ctx.arc(250,150,20,0,Math.PI*2); ctx.stroke();
+        }
+      },
+      {
+        nome: "ESFERA",
+        dica: "PARECE UMA BOLA",
+        arestas: 0, vertices: 0, faces: 1,
+        planificacao: "Não possui",
+        desenhar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.beginPath();
+          ctx.arc(150,100,50,0,Math.PI*2);
+          ctx.stroke();
+        },
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.font = "18px sans-serif";
+          ctx.fillText("Sem planificação", 80, 100);
+        }
+      },
+      {
+        nome: "PARALELEPÍPEDO",
+        dica: "FORMA DE UMA CAIXA",
+        arestas: 12, vertices: 8, faces: 6,
+        planificacao: "6 retângulos em cruz",
+        desenhar(ctx) {
           ctx.clearRect(0, 0, 300, 200);
+          ctx.strokeRect(80, 60, 100, 50);
+          ctx.strokeRect(100, 80, 100, 50);
           ctx.beginPath();
-          ctx.moveTo(150, 100);
-          ctx.arc(150, 100, 60, 0, Math.PI * 1.5);
-          ctx.fillStyle = "#ccc";
-          ctx.fill();
+          ctx.moveTo(80, 60); ctx.lineTo(100, 80);
+          ctx.moveTo(180, 60); ctx.lineTo(200, 80);
+          ctx.moveTo(80, 110); ctx.lineTo(100, 130);
+          ctx.moveTo(180, 110); ctx.lineTo(200, 130);
+          ctx.stroke();
+        },
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          for(let i=0;i<4;i++)ctx.strokeRect(90+i*30,80,30,60);
+          ctx.strokeRect(150,20,30,60);
+          ctx.strokeRect(150,140,30,60);
+        }
+      },
+      {
+        nome: "PIRÂMIDE",
+        dica: "BASE QUADRADA E VÉRTICE",
+        arestas: 8, vertices: 5, faces: 5,
+        planificacao: "1 quadrado e 4 triângulos",
+        desenhar(ctx) {
+          ctx.clearRect(0,0,300,200);
           ctx.beginPath();
-          ctx.arc(250, 150, 20, 0, Math.PI * 2);
+          ctx.moveTo(150,40); ctx.lineTo(100,140); ctx.lineTo(200,140);
+          ctx.closePath(); ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(125,90); ctx.lineTo(175,90);
+          ctx.moveTo(150,90); ctx.lineTo(150,140);
+          ctx.stroke();
+        },
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.strokeRect(130,80,40,40);
+          ctx.beginPath();
+          ctx.moveTo(130,80); ctx.lineTo(150,40); ctx.lineTo(170,80);
+          ctx.moveTo(130,120); ctx.lineTo(150,160); ctx.lineTo(170,120);
+          ctx.moveTo(130,80); ctx.lineTo(90,100); ctx.lineTo(130,120);
+          ctx.moveTo(170,80); ctx.lineTo(210,100); ctx.lineTo(170,120);
           ctx.stroke();
         }
       }
@@ -203,76 +213,69 @@
       renderPergunta();
     }
 
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return array;
+      return arr;
     }
 
     function renderPergunta() {
-      const ctx = document.getElementById("figuraCanvas").getContext("2d");
-      const figura = perguntasRodada[indiceAtual];
-      figura.desenhar(ctx);
+      const fig = perguntasRodada[indiceAtual];
+      fig.desenhar(document.getElementById("figuraCanvas").getContext("2d"));
+      document.getElementById("planCanvas").style.display = "none";
+      document.getElementById("planCanvas").getContext("2d").clearRect(0,0,300,200);
       document.getElementById("feedback").textContent = '';
       document.getElementById("infoExtra").innerHTML = '';
-      document.getElementById("planCanvas").style.display = "none";
-      document.getElementById("planCanvas").getContext("2d").clearRect(0, 0, 300, 200);
       document.getElementById("btnProxima").style.display = "none";
 
-      const opcoes = shuffle([...figuras.map(f => f.nome)]).slice(0, 3);
-      if (!opcoes.includes(figura.nome)) opcoes[0] = figura.nome;
-      shuffle(opcoes);
+      const opts = shuffle([...figuras.map(f => f.nome)]).slice(0,3);
+      if (!opts.includes(fig.nome)) opts[0] = fig.nome;
+      shuffle(opts);
 
-      const optDiv = document.getElementById("options");
-      optDiv.innerHTML = '';
-      opcoes.forEach(opt => {
+      document.getElementById("options").innerHTML = '';
+      opts.forEach(op => {
         const btn = document.createElement("button");
-        btn.textContent = opt;
-        btn.onclick = () => responder(opt, figura);
-        optDiv.appendChild(btn);
+        btn.textContent = op;
+        btn.onclick = () => responder(op, fig);
+        document.getElementById("options").appendChild(btn);
       });
-
-      updateScore();
+      document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
+      document.getElementById("rodada").textContent = `🔄 PERGUNTA ${indiceAtual+1} DE ${perguntasRodada.length}`;
     }
 
-    function responder(selecionado, figura) {
+    function responder(op, fig) {
       if (respondeu) return;
       respondeu = true;
       const fb = document.getElementById("feedback");
-      const planCanvas = document.getElementById("planCanvas");
-      const planCtx = planCanvas.getContext("2d");
-
-      if (selecionado === figura.nome) {
+      if (op === fig.nome) {
         acertos++;
         fb.textContent = "🎉 ACERTOU!";
         fb.style.color = "green";
       } else {
         erros++;
-        fb.textContent = `❌ ERROU! ERA: ${figura.nome}`;
+        fb.textContent = `❌ ERROU! ERA: ${fig.nome}`;
         fb.style.color = "red";
       }
-
-      figura.planificar(planCtx);
-      planCanvas.style.display = "block";
-
-      document.getElementById("infoExtra").innerHTML = `
-        🔺 FACES: ${figura.faces}<br>
-        🔸 ARESTAS: ${figura.arestas}<br>
-        🔹 VÉRTICES: ${figura.vertices}<br>
-        🧩 PLANIFICAÇÃO: ${figura.planificacao}
-      `;
-
+      fig.planificar(document.getElementById("planCanvas").getContext("2d"));
+      document.getElementById("planCanvas").style.display = "block";
+      document.getElementById("infoExtra").innerHTML = `🔺 FACES: ${fig.faces}<br>🔸 ARESTAS: ${fig.arestas}<br>🔹 VÉRTICES: ${fig.vertices}<br>🧩 PLANIFICAÇÃO: ${fig.planificacao}`;
       document.getElementById("btnProxima").style.display = "inline-block";
-
-      updateScore();
     }
 
     function proximaPergunta() {
       indiceAtual++;
       if (indiceAtual >= perguntasRodada.length) {
-        showFinalScreen();
+        const nota = Math.round((acertos / perguntasRodada.length) * 10);
+        document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}<br>📊 NOTA FINAL: ${nota}/10`;
+        document.getElementById("options").innerHTML = '';
+        document.getElementById("planCanvas").style.display = "none";
+        document.getElementById("infoExtra").innerHTML = '';
+        document.getElementById("score").textContent = "";
+        document.getElementById("rodada").textContent = "";
+        document.getElementById("btnReiniciar").style.display = "inline-block";
+        document.getElementById("btnProxima").style.display = "none";
       } else {
         respondeu = false;
         renderPergunta();
@@ -281,25 +284,6 @@
 
     function showHint() {
       alert("💡 DICA: " + perguntasRodada[indiceAtual].dica);
-    }
-
-    function updateScore() {
-      document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
-      document.getElementById("rodada").textContent = `🔄 PERGUNTA ${indiceAtual + 1} DE 5`;
-    }
-
-    function showFinalScreen() {
-      const nota = Math.round((acertos / perguntasRodada.length) * 10);
-      document.getElementById("figuraCanvas").getContext("2d").clearRect(0, 0, 300, 200);
-      document.getElementById("planCanvas").getContext("2d").clearRect(0, 0, 300, 200);
-      document.getElementById("planCanvas").style.display = "none";
-      document.getElementById("options").innerHTML = '';
-      document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}<br>📊 NOTA FINAL: ${nota}/10`;
-      document.getElementById("rodada").textContent = "";
-      document.getElementById("score").textContent = "";
-      document.getElementById("infoExtra").innerHTML = '';
-      document.getElementById("btnReiniciar").style.display = "inline-block";
-      document.getElementById("btnProxima").style.display = "none";
     }
 
     function reiniciarJogo() {
