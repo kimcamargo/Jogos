@@ -30,10 +30,15 @@
       color: #fff;
       text-shadow: 2px 2px #333;
     }
+    .canvas-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
     canvas {
       background: #f0f0f0;
       border-radius: 10px;
-      margin-bottom: 10px;
     }
     .options button, .buttons button {
       width: 100%;
@@ -66,8 +71,10 @@
 <body>
   <h1>Figuras Espaciais</h1>
   <div class="container">
-    <canvas id="figuraCanvas" width="300" height="200"></canvas>
-    <canvas id="planCanvas" width="300" height="200"></canvas>
+    <div class="canvas-wrapper">
+      <canvas id="figuraCanvas" width="300" height="200"></canvas>
+      <canvas id="planCanvas" width="300" height="200"></canvas>
+    </div>
     <div id="rodada"></div>
     <div id="score"></div>
     <div class="options" id="options"></div>
