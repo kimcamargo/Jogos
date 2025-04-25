@@ -121,17 +121,49 @@
         }
       },
       {
-        nome: "PRISMA TRIANGULAR",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          ctx.strokeRect(100,90,100,40);
-          ctx.beginPath();
-          ctx.moveTo(100,90); ctx.lineTo(120,50); ctx.lineTo(140,90);
-          ctx.moveTo(200,90); ctx.lineTo(220,50); ctx.lineTo(180,90);
-          ctx.stroke();
-        }
+        {
+  nome: "PRISMA TRIANGULAR",
+  planificar(ctx) {
+    ctx.clearRect(0, 0, 300, 200);
+    
+    // 3 retângulos lado a lado
+    for (let i = 0; i < 3; i++) {
+      ctx.strokeRect(60 + i * 50, 80, 50, 30);
+    }
+    
+    // Triângulo acima (base 1)
+    ctx.beginPath();
+    ctx.moveTo(85, 60); // ponta do triângulo
+    ctx.lineTo(60, 80);
+    ctx.lineTo(110, 80);
+    ctx.closePath();
+    ctx.stroke();
+    
+    // Triângulo abaixo (base 2)
+    ctx.beginPath();
+    ctx.moveTo(185, 60); // ponta do triângulo
+    ctx.lineTo(160, 80);
+    ctx.lineTo(210, 80);
+    ctx.closePath();
+    ctx.stroke();
+  }
+}
+
       },
-      
+      {
+      nome: "PRISMA RETANGULAR",
+      planificar(ctx) {
+        ctx.clearRect(0, 0, 300, 200);
+        // 4 faces laterais
+        for (let i = 0; i < 4; i++) {
+          ctx.strokeRect(50 + i * 40, 80, 40, 60);
+        }
+        // 2 bases (em cima e embaixo)
+        ctx.strokeRect(130, 20, 40, 60); // base superior
+        ctx.strokeRect(130, 140, 40, 60); // base inferior
+      }
+    }
+
       {
         nome: "PRISMA HEXAGONAL",
         planificar(ctx) {
