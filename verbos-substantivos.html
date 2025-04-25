@@ -78,6 +78,11 @@
       margin-top: 10px;
       font-weight: bold;
     }
+    .celebration {
+      font-size: 26px;
+      color: #ff6f61;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
@@ -87,6 +92,7 @@
     <div class="question" id="question">Carregando pergunta...</div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback"></div>
+    <div id="celebration" class="celebration"></div>
     <div class="buttons">
       <button onclick="showHint()">💡 Dica</button>
       <button onclick="nextQuestion()" id="nextBtn" style="display:none;">➡️ Próxima Pergunta</button>
@@ -153,18 +159,13 @@
       document.getElementById('restartBtn').style.display = 'none';
       document.getElementById('nextBtn').style.display = 'none';
       document.getElementById('feedback').textContent = '';
+      document.getElementById('celebration').textContent = '';
       nextQuestion();
     }
 
     function nextQuestion() {
       if (index >= rodada.length) {
-        const nota = Math.round((acertos / rodada.length) * 10);
-        document.getElementById('progress').textContent = `🏁 FIM DA RODADA!`;
-        document.getElementById('question').innerHTML = '';
-        document.getElementById('options').innerHTML = '';
-        document.getElementById('feedback').innerHTML = `✅ Acertos: ${acertos}<br>❌ Erros: ${rodada.length - acertos}<br>⭐ Nota Final: ${nota}/10`;
-        document.getElementById('restartBtn').style.display = 'inline-block';
-        document.getElementById('nextBtn').style.display = 'none';
+        showFinalResult();
         return;
       }
 
@@ -175,6 +176,7 @@
       document.getElementById('progress').textContent = `Pergunta ${index + 1}/10`;
       document.getElementById('question').textContent = currentQuestion.question;
       document.getElementById('feedback').textContent = '';
+      document.getElementById('celebration').textContent = '';
       document.getElementById('nextBtn').style.display = 'none';
 
       const optionsDiv = document.getElementById('options');
@@ -211,6 +213,23 @@
       if (!hintShown && currentQuestion.hint) {
         alert("💡 DICA: " + currentQuestion.hint.toUpperCase());
         hintShown = true;
+      }
+    }
+
+    function showFinalResult() {
+      const nota = Math.round((acertos / rodada.length) * 10);
+      document.getElementById('progress').textContent = `🏁 FIM DA RODADA!`;
+      document.getElementById('question').innerHTML = '';
+      document.getElementById('options').innerHTML = '';
+      document.getElementById('feedback').innerHTML = `✅ Acertos: ${acertos}<br>❌ Erros: ${rodada.length - acertos}<br>⭐ Nota Final: ${nota}/10`;
+      document.getElementById('restartBtn').style.display = 'inline-block';
+      document.getElementById('nextBtn').style.display = 'none';
+
+      if (nota === 10) {
+        // Chuva de confete especial
+        confetti({ particleCount: 200, spread: 90, startVelocity: 50, origin: { y: 0.6 } });
+        confetti({ particleCount: 200, spread: 120, startVelocity: 45, origin: { y: 0.6 } });
+        document.getElementById('celebration').textContent = '🏆 PARABÉNS! NOTA MÁXIMA!';
       }
     }
 
