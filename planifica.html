@@ -96,68 +96,128 @@
   </div>
 
   <script>
-    const questions = [
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Triangle_-_blue.svg",
-        question: "Quantos vértices tem esse triângulo?",
-        options: ["3", "4", "5"],
-        answer: "3"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Square_-_blue.svg",
-        question: "Quantas arestas tem esse quadrado?",
-        options: ["6", "4", "3"],
-        answer: "4"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Hexagon_-_blue.svg",
-        question: "Essa figura é um:",
-        options: ["Pentágono", "Hexágono", "Octógono"],
-        answer: "Hexágono"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Circle_-_blue.svg",
-        question: "Quantos vértices tem esse círculo?",
-        options: ["0", "1", "2"],
-        answer: "0"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rectangle_-_blue.svg",
-        question: "Essa figura é um:",
-        options: ["Retângulo", "Trapézio", "Triângulo"],
-        answer: "Retângulo"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pentagon_-_blue.svg",
-        question: "Quantas arestas tem esse pentágono?",
-        options: ["4", "5", "6"],
-        answer: "5"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Octagon_-_blue.svg",
-        question: "Quantos vértices tem esse octógono?",
-        options: ["6", "8", "10"],
-        answer: "8"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Trapezoid_-_blue.svg",
-        question: "Essa figura é um:",
-        options: ["Trapézio", "Quadrado", "Círculo"],
-        answer: "Trapézio"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Parallelogram_-_blue.svg",
-        question: "Essa figura é um:",
-        options: ["Retângulo", "Paralelogramo", "Pentágono"],
-        answer: "Paralelogramo"
-      },
-      {
-        img: "https://upload.wikimedia.org/wikipedia/commons/0/05/Rhombus_-_blue.svg",
-        question: "Essa figura é um:",
-        options: ["Romboide", "Rombo", "Triângulo"],
-        answer: "Rombo"
-      }
-    ];
+   const questions = [
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Triangle_-_blue.svg",
+    question: "Quantos vértices tem esse triângulo?",
+    options: ["3", "4", "5"],
+    answer: "3"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/0f/Square_-_blue.svg",
+    question: "Quantas arestas tem esse quadrado?",
+    options: ["6", "4", "3"],
+    answer: "4"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/0a/Hexagon_-_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Pentágono", "Hexágono", "Octógono"],
+    answer: "Hexágono"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Circle_-_blue.svg",
+    question: "Quantos vértices tem esse círculo?",
+    options: ["0", "1", "2"],
+    answer: "0"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Rectangle_-_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Retângulo", "Trapézio", "Triângulo"],
+    answer: "Retângulo"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/f/fd/Pentagon_-_blue.svg",
+    question: "Quantas arestas tem esse pentágono?",
+    options: ["4", "5", "6"],
+    answer: "5"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Octagon_-_blue.svg",
+    question: "Quantos vértices tem esse octógono?",
+    options: ["6", "8", "10"],
+    answer: "8"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/e/ee/Trapezoid_-_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Trapézio", "Quadrado", "Círculo"],
+    answer: "Trapézio"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Parallelogram_-_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Retângulo", "Paralelogramo", "Pentágono"],
+    answer: "Paralelogramo"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/05/Rhombus_-_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Romboide", "Rombo", "Triângulo"],
+    answer: "Rombo"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/f/f1/Cube_blue.svg",
+    question: "Qual é o nome desta forma tridimensional?",
+    options: ["Cubo", "Esfera", "Cilindro"],
+    answer: "Cubo"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Sphere_blue.svg",
+    question: "Qual é o nome desta forma tridimensional?",
+    options: ["Cubo", "Esfera", "Cone"],
+    answer: "Esfera"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/8/80/Cone_blue.svg",
+    question: "Qual é o nome desta forma tridimensional?",
+    options: ["Cilindro", "Cone", "Pirâmide"],
+    answer: "Cone"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/37/Cylinder_blue.svg",
+    question: "Qual é o nome desta forma tridimensional?",
+    options: ["Cilindro", "Cone", "Cubo"],
+    answer: "Cilindro"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/1/11/Pyramid_blue.svg",
+    question: "Qual é o nome desta forma tridimensional?",
+    options: ["Cubo", "Pirâmide", "Cone"],
+    answer: "Pirâmide"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Pentagon_blue.svg",
+    question: "Quantos lados tem esse pentágono?",
+    options: ["5", "6", "4"],
+    answer: "5"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/7/75/Heptagon_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Hexágono", "Heptágono", "Octógono"],
+    answer: "Heptágono"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/42/Nonagon_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Heptágono", "Nonágono", "Decágono"],
+    answer: "Nonágono"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Decagon_blue.svg",
+    question: "Essa figura é um:",
+    options: ["Octógono", "Decágono", "Nonágono"],
+    answer: "Decágono"
+  },
+  {
+    img: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Star_blue.svg",
+    question: "Quantas pontas tem essa estrela?",
+    options: ["5", "6", "7"],
+    answer: "5"
+  }
+];
 
     let rodada = [];
     let index = 0;
