@@ -126,14 +126,24 @@
           ctx.ellipse(150,140,50,15,0,0,Math.PI);
           ctx.stroke();
         },
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
+       planificar(ctx) {
+          ctx.clearRect(0, 0, 300, 200);
+        
+          // Setor circular (representando a parte lateral do cone)
           ctx.beginPath();
-          ctx.moveTo(150,100);
-          ctx.arc(150,100,60,0,Math.PI*1.5);
-          ctx.fillStyle="#ccc"; ctx.fill();
+          ctx.moveTo(150, 100);
+          ctx.arc(150, 100, 60, Math.PI * 0.1, Math.PI * 1.9); // um arco amplo tipo leque
+          ctx.lineTo(150, 100);
+          ctx.fillStyle = "#aee";
+          ctx.fill();
+          ctx.stroke();
+        
+          // Base circular separada
           ctx.beginPath();
-          ctx.arc(250,150,20,0,Math.PI*2); ctx.stroke();
+          ctx.arc(240, 150, 20, 0, Math.PI * 2);
+          ctx.fillStyle = "#aee";
+          ctx.fill();
+          ctx.stroke();
         }
       },
       {
