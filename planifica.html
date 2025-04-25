@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planificações - Figuras Geométricas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(to top right, #e0c3fc, #8ec5fc);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-transform: uppercase;
+    }
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    canvas {
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .options button, .buttons button {
+      width: 100%;
+      margin: 8px 0;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .options button {
+      background-color: #00a8e8;
+      color: white;
+    }
+    .options button:hover {
+      background-color: #0077b6;
+    }
+    .buttons button {
+      background-color: #ef476f;
+      color: white;
+    }
+    .buttons button:hover {
+      background-color: #c9184a;
+    }
+    .feedback {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>QUAL É A FIGURA?</h1>
+    <canvas id="canvas" width="300" height="200"></canvas>
+    <div id="score"></div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="buttons">
+      <button onclick="nextQuestion()" id="nextBtn" style="display:none">➡️ Próxima</button>
+      <button onclick="startGame()" id="restartBtn" style="display:none">🔁 Jogar Novamente</button>
+    </div>
+  </div>
+
+  <script>
+    const figuras = [
+      {
+        nome: "CUBO",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          for(let i=0;i<4;i++)ctx.strokeRect(80+i*30,80,30,30);
+          ctx.strokeRect(110,50,30,30);
+          ctx.strokeRect(110,110,30,30);
+        }
+      },
+      {
+        nome: "PIRÂMIDE",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.strokeRect(120,90,40,40);
+          ctx.beginPath();
+          ctx.moveTo(120,90); ctx.lineTo(100,60); ctx.lineTo(160,90);
+          ctx.moveTo(120,130); ctx.lineTo(100,160); ctx.lineTo(160,130);
+          ctx.moveTo(120,90); ctx.lineTo(90,100); ctx.lineTo(120,130);
+          ctx.moveTo(160,90); ctx.lineTo(190,100); ctx.lineTo(160,130);
+          ctx.stroke();
+        }
+      },
+      {
+        nome: "CILINDRO",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.strokeRect(90,80,120,40);
+          ctx.beginPath();
+          ctx.arc(90,100,20,0,Math.PI*2); ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(210,100,20,0,Math.PI*2); ctx.stroke();
+        }
+      },
+      {
+        nome: "CONE",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.beginPath();
+          ctx.moveTo(150,100);
+          ctx.arc(150,100,60,Math.PI*0.2,Math.PI*1.8);
+          ctx.lineTo(150,100);
+          ctx.fillStyle="#ccf";
+          ctx.fill(); ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(250,160,20,0,Math.PI*2);
+          ctx.fillStyle="#ccf";
+          ctx.fill(); ctx.stroke();
+        }
+      },
+      {
+        nome: "ESFERA",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.font = "16px sans-serif";
+          ctx.fillText("SEM PLANIFICAÇÃO", 90, 100);
+        }
+      }
+    ];
+
+    let rodada = [];
+    let index = 0;
+    let acertos = 0;
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function startGame() {
+      rodada = shuffle([...figuras, ...figuras]).slice(0, 10);
+      index = 0;
+      acertos = 0;
+      document.getElementById("restartBtn").style.display = "none";
+      nextQuestion();
+    }
+
+    function nextQuestion() {
+      if (index >= rodada.length) {
+        document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${10 - acertos}`;
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("restartBtn").style.display = "inline-block";
+        return;
+      }
+      const fig = rodada[index];
+      fig.planificar(document.getElementById("canvas").getContext("2d"));
+      document.getElementById("feedback").textContent = '';
+      document.getElementById("nextBtn").style.display = "none";
+      const opcoes = shuffle([...figuras.map(f => f.nome)]).slice(0,3);
+      if (!opcoes.includes(fig.nome)) opcoes[0] = fig.nome;
+      shuffle(opcoes);
+      const optDiv = document.getElementById("options");
+      optDiv.innerHTML = '';
+      opcoes.forEach(op => {
+        const btn = document.createElement("button");
+        btn.textContent = op;
+        btn.onclick = () => verificarResposta(op, fig.nome);
+        optDiv.appendChild(btn);
+      });
+      document.getElementById("score").textContent = `🔢 Pergunta ${index + 1} de 10`;
+    }
+
+    function verificarResposta(resposta, correta) {
+      const fb = document.getElementById("feedback");
+      if (resposta === correta) {
+        acertos++;
+        fb.textContent = "🎉 ACERTOU!";
+        fb.style.color = "green";
+      } else {
+        fb.innerHTML = `❌ ERROU! Era: ${correta}`;
+        fb.style.color = "red";
+      }
+      index++;
+      document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    window.onload = startGame;
+  </script>
+</body>
+</html>
