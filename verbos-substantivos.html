@@ -37,6 +37,11 @@
     .question {
       font-size: 24px;
       color: #444;
+      margin-bottom: 10px;
+    }
+    .progress {
+      font-size: 18px;
+      color: #555;
       margin-bottom: 20px;
     }
     .options button, .buttons button {
@@ -78,6 +83,7 @@
 <body>
   <h1>Verbos e Substantivos</h1>
   <div class="container">
+    <div class="progress" id="progress">Pergunta 1/10</div>
     <div class="question" id="question">Carregando pergunta...</div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback"></div>
@@ -90,7 +96,7 @@
   </div>
 
   <script>
-     const questions = [
+    const questions = [
       { question: "A PALAVRA 'GATO' É UM EXEMPLO DE:", options: ["VERBO", "SUBSTANTIVO COMUM", "SUBSTANTIVO PRÓPRIO"], answer: "SUBSTANTIVO COMUM", hint: "NOME DE ANIMAL GENÉRICO" },
       { question: "A PALAVRA 'COMER' É UM EXEMPLO DE:", options: ["SUBSTANTIVO COMUM", "VERBO", "SUBSTANTIVO PRÓPRIO"], answer: "VERBO", hint: "AÇÃO COM COMIDA" },
       { question: "A PALAVRA 'BRASIL' É UM EXEMPLO DE:", options: ["SUBSTANTIVO PRÓPRIO", "VERBO", "SUBSTANTIVO COMUM"], answer: "SUBSTANTIVO PRÓPRIO", hint: "É UM PAÍS" },
@@ -147,16 +153,16 @@
       document.getElementById('restartBtn').style.display = 'none';
       document.getElementById('nextBtn').style.display = 'none';
       document.getElementById('feedback').textContent = '';
-      document.getElementById('question').textContent = '';
       nextQuestion();
     }
 
     function nextQuestion() {
       if (index >= rodada.length) {
         const nota = Math.round((acertos / rodada.length) * 10);
-        document.getElementById('question').innerHTML = `🏁 FIM DA RODADA!`;
+        document.getElementById('progress').textContent = `🏁 FIM DA RODADA!`;
+        document.getElementById('question').innerHTML = '';
         document.getElementById('options').innerHTML = '';
-        document.getElementById('feedback').innerHTML = `✅ Acertos: ${acertos} | ❌ Erros: ${rodada.length - acertos}<br>⭐ Nota Final: ${nota}/10`;
+        document.getElementById('feedback').innerHTML = `✅ Acertos: ${acertos}<br>❌ Erros: ${rodada.length - acertos}<br>⭐ Nota Final: ${nota}/10`;
         document.getElementById('restartBtn').style.display = 'inline-block';
         document.getElementById('nextBtn').style.display = 'none';
         return;
@@ -166,6 +172,7 @@
       hintShown = false;
       respondeu = false;
 
+      document.getElementById('progress').textContent = `Pergunta ${index + 1}/10`;
       document.getElementById('question').textContent = currentQuestion.question;
       document.getElementById('feedback').textContent = '';
       document.getElementById('nextBtn').style.display = 'none';
