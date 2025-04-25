@@ -127,24 +127,24 @@
           ctx.stroke();
         },
        planificar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-        
-          // Setor circular (parte lateral do cone)
-          ctx.beginPath();
-          ctx.moveTo(150, 100);
-          ctx.arc(150, 100, 60, 0, Math.PI * 2 * 0.75); // 270 graus
-          ctx.lineTo(150, 100);
-          ctx.fillStyle = "#aee";
-          ctx.fill();
-          ctx.stroke();
-        
-          // Base circular separada
-          ctx.beginPath();
-          ctx.arc(240, 160, 20, 0, Math.PI * 2);
-          ctx.fillStyle = "#aee";
-          ctx.fill();
-          ctx.stroke();
-        }
+        ctx.clearRect(0, 0, 300, 200);
+      
+        // Setor circular - superfície lateral
+        ctx.beginPath();
+        ctx.moveTo(150, 120);
+        ctx.arc(150, 120, 70, Math.PI * 0.25, Math.PI * 1.75); // abertura de 270°
+        ctx.closePath();
+        ctx.fillStyle = "#ffd966"; // amarelinho como sua imagem
+        ctx.fill();
+        ctx.stroke();
+      
+        // Base circular separada
+        ctx.beginPath();
+        ctx.arc(250, 160, 25, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffd966";
+        ctx.fill();
+        ctx.stroke();
+      }
 
       },
       {
