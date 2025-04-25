@@ -128,11 +128,23 @@
         }
       },
       {
-        nome: "ESFERA",
+        nome: "PARALELEPÍPEDO",
         planificar(ctx) {
           ctx.clearRect(0,0,300,200);
-          ctx.font = "16px sans-serif";
-          ctx.fillText("SEM PLANIFICAÇÃO", 90, 100);
+          for(let i=0;i<4;i++)ctx.strokeRect(60+i*30,80,30,50);
+          ctx.strokeRect(150,30,30,50);
+          ctx.strokeRect(150,130,30,50);
+        }
+      },
+      {
+        nome: "PRISMA TRIANGULAR",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.strokeRect(100,90,100,40);
+          ctx.beginPath();
+          ctx.moveTo(100,90); ctx.lineTo(120,50); ctx.lineTo(140,90);
+          ctx.moveTo(200,90); ctx.lineTo(220,50); ctx.lineTo(180,90);
+          ctx.stroke();
         }
       }
     ];
@@ -150,7 +162,7 @@
     }
 
     function startGame() {
-      rodada = shuffle([...figuras, ...figuras]).slice(0, 10);
+      rodada = shuffle([...figuras]).slice(0, 10);
       index = 0;
       acertos = 0;
       document.getElementById("restartBtn").style.display = "none";
