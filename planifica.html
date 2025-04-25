@@ -112,22 +112,6 @@
         }
       },
       {
-        nome: "CONE",
-        planificar(ctx) {
-          ctx.clearRect(0,0,300,200);
-          ctx.beginPath();
-          ctx.moveTo(150,100);
-          ctx.arc(150,100,60,Math.PI*0.2,Math.PI*1.8);
-          ctx.lineTo(150,100);
-          ctx.fillStyle="#ccf";
-          ctx.fill(); ctx.stroke();
-          ctx.beginPath();
-          ctx.arc(250,160,20,0,Math.PI*2);
-          ctx.fillStyle="#ccf";
-          ctx.fill(); ctx.stroke();
-        }
-      },
-      {
         nome: "PARALELEPÍPEDO",
         planificar(ctx) {
           ctx.clearRect(0,0,300,200);
@@ -145,6 +129,21 @@
           ctx.moveTo(100,90); ctx.lineTo(120,50); ctx.lineTo(140,90);
           ctx.moveTo(200,90); ctx.lineTo(220,50); ctx.lineTo(180,90);
           ctx.stroke();
+        }
+      },
+      {
+        nome: "PRISMA RETANGULAR",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          ctx.strokeRect(90,70,120,40);
+          ctx.strokeRect(90,110,120,40);
+        }
+      },
+      {
+        nome: "PRISMA HEXAGONAL",
+        planificar(ctx) {
+          ctx.clearRect(0,0,300,200);
+          for(let i=0;i<6;i++)ctx.strokeRect(50+i*30,90,30,40);
         }
       }
     ];
@@ -171,7 +170,8 @@
 
     function nextQuestion() {
       if (index >= rodada.length) {
-        document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${10 - acertos}`;
+        const nota = Math.round((acertos / rodada.length) * 10);
+        document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${rodada.length - acertos}<br>⭐ NOTA FINAL: ${nota}/10`;
         document.getElementById("nextBtn").style.display = "none";
         document.getElementById("restartBtn").style.display = "inline-block";
         return;
@@ -191,7 +191,7 @@
         btn.onclick = () => verificarResposta(op, fig.nome);
         optDiv.appendChild(btn);
       });
-      document.getElementById("score").textContent = `🔢 Pergunta ${index + 1} de 10`;
+      document.getElementById("score").textContent = `🔢 Pergunta ${index + 1} de ${rodada.length}`;
     }
 
     function verificarResposta(resposta, correta) {
