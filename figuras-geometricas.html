@@ -35,7 +35,7 @@
     canvas {
       background: #f0f0f0;
       border-radius: 12px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
     .options button {
       display: block;
@@ -101,7 +101,8 @@
     <div id="infoExtra"></div>
     <div class="buttons">
       <button onclick="showHint()">💡 Dica</button>
-      <button onclick="reiniciarJogo()">🔁 Jogar Novamente</button>
+      <button id="btnProxima" onclick="proximaPergunta()" style="display:none">➡️ Próxima Pergunta</button>
+      <button id="btnReiniciar" onclick="reiniciarJogo()" style="display:none">🔁 Jogar Novamente</button>
       <button onclick="location.href='matematica.html'">🔙 Voltar</button>
     </div>
   </div>
@@ -157,23 +158,6 @@
         }
       },
       {
-        nome: "ESFERA",
-        dica: "PARECE UMA BOLA",
-        arestas: 0, vertices: 0, faces: 1,
-        planificacao: "A esfera não possui planificação.",
-        desenhar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.beginPath();
-          ctx.arc(150, 100, 50, 0, 2 * Math.PI);
-          ctx.stroke();
-        },
-        planificar(ctx) {
-          ctx.clearRect(0, 0, 300, 200);
-          ctx.font = "18px sans-serif";
-          ctx.fillText("Sem planificação", 90, 100);
-        }
-      },
-      {
         nome: "CONE",
         dica: "TEM BASE CIRCULAR E PONTA",
         arestas: 1, vertices: 1, faces: 2,
@@ -210,11 +194,12 @@
     let respondeu = false;
 
     function iniciarRodada() {
-      perguntasRodada = shuffle([...figuras]).slice(0, 10);
+      perguntasRodada = shuffle([...figuras]).slice(0, 5);
       indiceAtual = 0;
       acertos = 0;
       erros = 0;
       respondeu = false;
+      document.getElementById("btnReiniciar").style.display = "none";
       renderPergunta();
     }
 
@@ -230,13 +215,13 @@
       const ctx = document.getElementById("figuraCanvas").getContext("2d");
       const figura = perguntasRodada[indiceAtual];
       figura.desenhar(ctx);
-
       document.getElementById("feedback").textContent = '';
       document.getElementById("infoExtra").innerHTML = '';
       document.getElementById("planCanvas").style.display = "none";
       document.getElementById("planCanvas").getContext("2d").clearRect(0, 0, 300, 200);
+      document.getElementById("btnProxima").style.display = "none";
 
-      const opcoes = shuffle([...figuras.map(f => f.nome)]).filter((v, i, a) => a.indexOf(v) === i).slice(0, 3);
+      const opcoes = shuffle([...figuras.map(f => f.nome)]).slice(0, 3);
       if (!opcoes.includes(figura.nome)) opcoes[0] = figura.nome;
       shuffle(opcoes);
 
@@ -279,17 +264,19 @@
         🧩 PLANIFICAÇÃO: ${figura.planificacao}
       `;
 
-      setTimeout(() => {
-        indiceAtual++;
-        if (indiceAtual >= perguntasRodada.length) {
-          showFinalScreen();
-        } else {
-          respondeu = false;
-          renderPergunta();
-        }
-      }, 10000);
+      document.getElementById("btnProxima").style.display = "inline-block";
 
       updateScore();
+    }
+
+    function proximaPergunta() {
+      indiceAtual++;
+      if (indiceAtual >= perguntasRodada.length) {
+        showFinalScreen();
+      } else {
+        respondeu = false;
+        renderPergunta();
+      }
     }
 
     function showHint() {
@@ -298,18 +285,21 @@
 
     function updateScore() {
       document.getElementById("score").textContent = `✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
-      document.getElementById("rodada").textContent = `🔄 PERGUNTA ${indiceAtual + 1} DE 10`;
+      document.getElementById("rodada").textContent = `🔄 PERGUNTA ${indiceAtual + 1} DE 5`;
     }
 
     function showFinalScreen() {
+      const nota = Math.round((acertos / perguntasRodada.length) * 10);
       document.getElementById("figuraCanvas").getContext("2d").clearRect(0, 0, 300, 200);
       document.getElementById("planCanvas").getContext("2d").clearRect(0, 0, 300, 200);
       document.getElementById("planCanvas").style.display = "none";
       document.getElementById("options").innerHTML = '';
-      document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
+      document.getElementById("feedback").innerHTML = `🏁 FIM DA RODADA!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}<br>📊 NOTA FINAL: ${nota}/10`;
       document.getElementById("rodada").textContent = "";
       document.getElementById("score").textContent = "";
       document.getElementById("infoExtra").innerHTML = '';
+      document.getElementById("btnReiniciar").style.display = "inline-block";
+      document.getElementById("btnProxima").style.display = "none";
     }
 
     function reiniciarJogo() {
