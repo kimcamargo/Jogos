@@ -95,6 +95,10 @@
       font-size: 16px;
       margin-bottom: 10px;
     }
+
+    #planCanvas {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -171,7 +175,6 @@
         faces: 3,
         planificacao: "Um retângulo entre dois círculos."
       }
-      // Adicione mais figuras aqui com planificar
     ];
 
     let perguntasRodada = [];
@@ -205,18 +208,19 @@
 
       document.getElementById("feedback").textContent = '';
       document.getElementById("infoExtra").innerHTML = '';
-      document.getElementById("planCanvas").getContext("2d").clearRect(0, 0, 300, 200);
+      const planCanvas = document.getElementById("planCanvas");
+      planCanvas.style.display = "none";
+      planCanvas.getContext("2d").clearRect(0, 0, 300, 200);
 
+      const optDiv = document.getElementById("options");
+      optDiv.innerHTML = '';
       const opcoes = shuffle([...new Set([figura.nome, ...figuras.map(f => f.nome)])]).slice(0, 3);
       if (!opcoes.includes(figura.nome)) opcoes[0] = figura.nome;
       shuffle(opcoes);
 
-      const optDiv = document.getElementById("options");
-      optDiv.innerHTML = '';
       opcoes.forEach(op => {
         const btn = document.createElement("button");
         btn.textContent = op;
-        btn.disabled = respondeu;
         btn.onclick = () => responder(op, figura);
         optDiv.appendChild(btn);
       });
@@ -228,6 +232,9 @@
       if (respondeu) return;
       respondeu = true;
       const fb = document.getElementById("feedback");
+      const planCanvas = document.getElementById("planCanvas");
+      const planCtx = planCanvas.getContext("2d");
+
       if (selecionado === figura.nome) {
         acertos++;
         fb.textContent = "🎉 ACERTOU!";
@@ -238,8 +245,8 @@
         fb.style.color = "red";
       }
 
-      const planCtx = document.getElementById("planCanvas").getContext("2d");
       figura.planificar(planCtx);
+      planCanvas.style.display = "block";
 
       document.getElementById("infoExtra").innerHTML = `
         🔺 FACES: ${figura.faces}<br>
@@ -256,7 +263,7 @@
           respondeu = false;
           renderPergunta();
         }
-      }, 1200);
+      }, 1500);
 
       updateScore();
     }
@@ -271,11 +278,9 @@
     }
 
     function showFinalScreen() {
-      const canvas = document.getElementById("figuraCanvas");
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById("figuraCanvas").getContext("2d").clearRect(0, 0, 300, 200);
       document.getElementById("planCanvas").getContext("2d").clearRect(0, 0, 300, 200);
-
+      document.getElementById("planCanvas").style.display = "none";
       document.getElementById("options").innerHTML = '';
       document.getElementById("feedback").innerHTML = `🏁 FIM DO JOGO!<br>✅ ACERTOS: ${acertos} | ❌ ERROS: ${erros}`;
       document.getElementById("rodada").textContent = "";
